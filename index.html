@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demen FM - Emang Ndemenin</title>
+<style>
+body{margin:0;font-family:Arial;background:#071b36;color:white;text-align:center}
+header{background:#087eaa;padding:30px 10px}
+.logo{font-size:38px;font-weight:bold;color:#ffe45c}
+.card{background:white;color:#123;padding:22px;margin:20px auto;border-radius:18px;max-width:450px}
+button{background:#e91e50;color:white;border:0;border-radius:30px;padding:15px 25px;font-size:18px}
+audio{width:100%;margin:15px 0}
+input{width:95%;padding:12px;box-sizing:border-box;margin:10px 0}
+a{color:#087eaa}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">DEMEN FM</div>
+<h3>Emang Ndemenin</h3>
+<p>Media Informasi dan Hiburan</p>
+</header>
+<div class="card">
+<h2>📻 RADIO ONLINE</h2>
+<p>Dengarkan siaran Demen FM</p>
+<audio id="radio" controls></audio>
+<input id="url" placeholder="Alamat streaming radio">
+<br>
+<button onclick="playRadio()">▶ PUTAR RADIO</button>
+<p id="status">Masukkan alamat streaming untuk mulai siaran.</p>
+</div>
+<div class="card">
+<h2>Musik dan Hiburan</h2>
+<a href="https://www.youtube.com/" target="_blank">Buka YouTube</a>
+</div>
+<script>
+function playRadio(){
+let u=document.getElementById('url').value.trim();
+let r=document.getElementById('radio');
+if(!u){document.getElementById('status').textContent='Alamat streaming belum diisi.';return;}
+r.src=u;
+r.play().catch(()=>document.getElementById('status').textContent='Periksa alamat streaming radio.');
+}
+</script>
+</body>
+</html>
