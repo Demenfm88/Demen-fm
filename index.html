@@ -25,6 +25,28 @@ a{color:#087eaa}
 <body>
 <header>
 <img src="./logo%20demen-fm.png" alt="Logo Demen FM">
+
+<div class="slideshow" style="margin:15px auto;text-align:center;">
+  <img id="foto-slideshow"
+       src="./logo%20demen-fm.png"
+       alt="Foto Demen FM"
+       style="width:100%;max-width:700px;height:240px;object-fit:cover;border-radius:12px;">
+</div>
+
+<script>
+const fotoDemenFM = [
+  "./logo%20demen-fm.png"
+];
+
+let nomorFoto = 0;
+
+setInterval(function () {
+  nomorFoto = (nomorFoto + 1) % fotoDemenFM.length;
+  document.getElementById("foto-slideshow").src =
+    fotoDemenFM[nomorFoto];
+}, 4000);
+</script>
+
 <h1>DEMEN FM</h1>
 <h3>Emang Ndemenin</h3>
 <p>Media Informasi dan Hiburan</p>
