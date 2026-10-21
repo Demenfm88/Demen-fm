@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Studio Admin Demen FM</title>
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .studio {
+      max-width: 500px;
+      margin: auto;
+      border: 2px solid red;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    h2 { color: red; }
+    input, button {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 6px;
+    }
+    button {
+      background: red;
+      color: white;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="studio">
+    <h2>Studio Admin Demen FM</h2>
+    <p>Panel kontrol radio Demen FM</p>
+
+    <label>URL Streaming</label>
+    <input type="url" placeholder="Masukkan URL streaming">
+
+    <label>Kode Stream</label>
+    <input type="password" placeholder="Kode stream untuk nanti">
+
+    <p>Panel ini masih berupa tampilan awal. Belum terhubung ke server radio.</p>
+    <button onclick="history.back()">Kembali</button>
+  </div>
+</body>
+</html>
