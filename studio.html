@@ -149,6 +149,28 @@ document.getElementById('openYouTube').addEventListener('click', function() {
 });
 </script>
 
+<hr>
+<h3>🖼️ Unggah Gambar Informasi</h3>
+<p>Pilih gambar dari HP untuk melihat pratinjaunya.</p>
+<input type="file" id="imageUpload" accept="image/*" multiple>
+<div id="imagePreview" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
+
+<script>
+document.getElementById('imageUpload').addEventListener('change', function() {
+  const area = document.getElementById('imagePreview');
+  area.innerHTML = '';
+
+  Array.from(this.files || []).forEach(file => {
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    img.alt = file.name;
+    img.style.width = '100%';
+    img.style.borderRadius = '8px';
+    area.appendChild(img);
+  });
+});
+</script>
+
     <button onclick="history.back()">Kembali</button>
   </div>
 </body>
