@@ -100,6 +100,55 @@ nextSong.addEventListener('click', () => {
 });
 </script>
 
+<hr>
+<h3>▶️ Pemutar YouTube</h3>
+<p>Masukkan tautan video YouTube.</p>
+<input id="youtubeURL" type="url" placeholder="Tempel tautan YouTube di sini">
+<button type="button" id="openYouTube">Putar YouTube</button>
+<div id="youtubePlayer"></div>
+
+<script>
+document.getElementById('openYouTube').addEventListener('click', function() {
+  const url = document.getElementById('youtubeURL').value.trim();
+  let videoID = '';
+
+  try {
+    const link = new URL(url);
+    if (link.hostname === 'youtu.be') {
+      videoID = link.pathname.slice(1).split('/')[0];
+    } else if (
+      link.hostname === 'youtube.com' ||
+      link.hostname.endsWith('.youtube.com')
+    ) {
+      if (link.pathname === '/watch') {
+        videoID = link.searchParams.get('v') || '';
+      } else if (link.pathname.startsWith('/embed/')) {
+        videoID = link.pathname.split('/')[2] || '';
+      } else if (link.pathname.startsWith('/shorts/')) {
+        videoID = link.pathname.split('/')[2] || '';
+      }
+    }
+  } catch (e) {}
+
+  const area = document.getElementById('youtubePlayer');
+  area.innerHTML = '';
+
+  if (!/^[a-zA-Z0-9_-]{11}$/.test(videoID)) {
+    area.textContent = 'Tautan YouTube belum benar. Coba tautan video biasa.';
+    return;
+  }
+
+  const frame = document.createElement('iframe');
+  frame.src = 'https://www.youtube-nocookie.com/embed/' + videoID;
+  frame.width = '100%';
+  frame.height = '230';
+  frame.allow = 'autoplay; encrypted-media; picture-in-picture';
+  frame.allowFullscreen = true;
+  frame.style.border = '0';
+  area.appendChild(frame);
+});
+</script>
+
     <button onclick="history.back()">Kembali</button>
   </div>
 </body>
