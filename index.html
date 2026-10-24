@@ -58,23 +58,29 @@ setInterval(function () {
 <main>
 
 
+<section class="card">
+  <h2>🎵 PEMUTAR MUSIK</h2>
+  <p>Pilih file musik dari HP atau komputer.</p>
+  <input id="files" type="file" accept="audio/*" multiple>
+  <audio id="player" controls></audio>
+  <p id="now">Belum ada lagu dipilih.</p>
+  <button onclick="playMusic()">▶ PUTAR</button>
+  <button onclick="pauseMusic()">⏸ JEDA</button>
+  <button onclick="previousSong()">⏮ SEBELUMNYA</button>
+  <button onclick="nextSong()">⏭ BERIKUTNYA</button>
+</section>
 
-  <section class="card">
-<h2>🎵 PEMUTAR MUSIK</h2>
-<p>Pilih file musik dari HP atau komputer.</p>
-<input id="files" type="file" accept="audio/*" multiple>
-<audio id="player" controls></audio>
-<p id="now">Belum ada lagu dipilih.</p>
-<button onclick="playMusic()">▶ PUTAR</button>
-<button onclick="pauseMusic()">⏸ JEDA</button>
-<button onclick="previousSong()">⏮ SEBELUMNYA</button>
-<button onclick="nextSong()">⏭ BERIKUTNYA</button>
+<section class="card">
   <h2>📢 Informasi Demen FM</h2>
   <img
-\u003Cinput id=\"files\" type=\"file\" accept=\"audio/*\" multiple>    src="./IMG-20261024-WA6585.jpg"
+    src="./IMG-20261024-WA6585.jpg"
     alt="Informasi Demen FM"
     style="width:100%;height:auto;border-radius:12px"
-  </section>
+  >
+</section>
+
+
+
 
 <section class="card">
 <h2>🎧 DAFTAR LAGU & AUTO DJ</h2>
