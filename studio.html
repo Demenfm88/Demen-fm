@@ -46,6 +46,60 @@
     <input type="password" placeholder="Kode stream untuk nanti">
 
     <p>Panel ini masih berupa tampilan awal. Belum terhubung ke server radio.</p>
+   
+<h3>🎵 Musik dan Auto DJ</h3>
+<p>Pilih lagu dari HP untuk diputar berurutan.</p>
+<input type="file" id="musicFiles" accept="audio/*" multiple>
+<audio id="audioPlayer" controls style="width:100%"></audio>
+<p id="nowPlaying">Belum ada lagu dipilih.</p>
+<button type="button" id="nextSong">Lagu Berikutnya</button>
+<ul id="songList"></ul>
+<script>
+const musicFiles = document.getElementById('musicFiles');
+const audioPlayer = document.getElementById('audioPlayer');
+const nextSong = document.getElementById('nextSong');
+const nowPlaying = document.getElementById('nowPlaying');
+const songList = document.getElementById('songList');
+let songs = [];
+let currentIndex = 0;
+let currentURL = '';
+
+function playSong(index) {
+  if (!songs.length) return;
+  currentIndex = (index + songs.length) % songs.length;
+  if (currentURL) URL.revokeObjectURL(currentURL);
+  currentURL = URL.createObjectURL(songs[currentIndex]);
+  audioPlayer.src = currentURL;
+  nowPlaying.textContent = 'Sedang diputar: ' + songs[currentIndex].name;
+  audioPlayer.play().catch(() => {});
+}
+
+musicFiles.addEventListener('change', function() {
+  songs = Array.from(this.files || []);
+  currentIndex = 0;
+  songList.innerHTML = '';
+  songs.forEach((song, index) => {
+    const item = document.createElement('li');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = song.name;
+    button.addEventListener('click', () => playSong(index));
+    item.appendChild(button);
+    songList.appendChild(item);
+  });
+  if (songs.length) playSong(0);
+  else nowPlaying.textContent = 'Belum ada lagu dipilih.';
+});
+
+audioPlayer.addEventListener('ended', () => {
+  if (songs.length) playSong(currentIndex + 1);
+});
+
+nextSong.addEventListener('click', () => {
+  if (songs.length) playSong(currentIndex + 1);
+});
+</script>
+
     <button onclick="history.back()">Kembali</button>
   </div>
 </body>
