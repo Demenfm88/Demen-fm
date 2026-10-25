@@ -278,5 +278,21 @@ function matikanMic() {
   document.getElementById("statusMic").textContent = "Mic mati";
 }
 
+
+<!-- KONTROL MIKROFON DEMEN FM -->
+<div style="background:#181818;color:white;padding:15px;border-radius:12px;margin:15px 0;text-align:center;">
+  <h3 style="color:#ff3333;">🎙️ Mikrofon Studio</h3>
+
+  <button onclick="aktifkanMic()" style="background:#d90000;color:white;padding:12px 18px;border:0;border-radius:8px;margin:5px;">
+    AKTIFKAN MIC
+  </button>
+
+  <button onclick="matikanMic()" style="background:#444;color:white;padding:12px 18px;border:0;border-radius:8px;margin:5px;">
+    MATIKAN MIC
+  </button>
+
+  <p id="statusMic">Mic belum diaktifkan</p>
+</div>
+
 </body>
 </html>
