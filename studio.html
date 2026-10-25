@@ -184,5 +184,46 @@ document.getElementById('imageUpload').addEventListener('change', function() {
     <button type="button" onclick="alert('Pengaturan sudah diisi. Tombol ini belum terhubung ke server streaming.')" style="width:100%;padding:14px;background:#d71920;color:white;border:0;border-radius:8px;font-weight:bold">🔴 GO LIVE</button>
   </section>
 
+<section style="background:#181818;color:white;padding:16px;border-radius:12px;margin:16px 0">
+  <h2 style="color:#ff3333">📰 Info Terbaru Demen FM</h2>
+
+  <label>Pilih Gambar dari HP</label>
+  <input type="file" id="infoGambar" accept="image/*" onchange="pratinjauInfo()" style="display:block;width:100%;margin:12px 0">
+
+  <img id="lihatGambar" style="display:none;width:100%;max-height:300px;object-fit:contain;border-radius:10px;margin-bottom:12px">
+
+  <label>Judul Informasi</label>
+  <input id="judulInfo" type="text" placeholder="Contoh: Info terbaru Demen FM" style="width:100%;box-sizing:border-box;padding:12px;margin:8px 0 14px">
+
+  <label>Deskripsi / Keterangan</label>
+  <textarea id="deskripsiInfo" placeholder="Tulis keterangan untuk pendengar..." style="width:100%;box-sizing:border-box;padding:12px;margin:8px 0 14px;min-height:90px"></textarea>
+
+  <button type="button" onclick="pratinjauInfo()" style="width:100%;padding:13px;background:#b91c1c;color:white;border:0;border-radius:8px;font-weight:bold">
+    LIHAT PRATINJAU
+  </button>
+
+  <p id="statusInfo">Pilih gambar dan isi judul serta keterangannya.</p>
+</section>
+
+<script>
+function pratinjauInfo() {
+  const file = document.getElementById('infoGambar').files[0];
+  const gambar = document.getElementById('lihatGambar');
+  const status = document.getElementById('statusInfo');
+
+  if (file) {
+    gambar.src = URL.createObjectURL(file);
+    gambar.style.display = 'block';
+  }
+
+  const judul = document.getElementById('judulInfo').value.trim();
+  const deskripsi = document.getElementById('deskripsiInfo').value.trim();
+
+  status.textContent = judul && deskripsi && file
+    ? 'Pratinjau siap. Belum diterbitkan ke halaman pendengar.'
+    : 'Lengkapi gambar, judul, dan keterangan.';
+}
+</script>
+
 </body>
 </html>
