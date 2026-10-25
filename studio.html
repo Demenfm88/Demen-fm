@@ -236,5 +236,21 @@ function pratinjauInfo() {
 }
 </script>
 
+<script>
+function terbitkanInfo() {
+  const file = document.getElementById('infoGambar').files[0];
+  const judul = document.getElementById('judulInfo').value.trim();
+  const deskripsi = document.getElementById('deskripsiInfo').value.trim();
+  const status = document.getElementById('statusInfo');
+
+  if (!file || !judul || !deskripsi) {
+    status.textContent = 'Lengkapi gambar, judul, dan keterangan dahulu.';
+    return;
+  }
+
+  status.textContent = 'Data lengkap. Penyimpanan dan penerbitan ke halaman pendengar belum terhubung.';
+}
+</script>
+
 </body>
 </html>
