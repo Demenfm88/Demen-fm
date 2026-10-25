@@ -173,5 +173,24 @@ document.getElementById('imageUpload').addEventListener('change', function() {
 
     <button onclick="history.back()">Kembali</button>
   </div>
+
+  <section style="background:#181818;color:white;padding:16px;border-radius:12px;margin:16px 0">
+    <h2 style="color:#ff3333">🎙️ Pengaturan Live Demen FM</h2>
+
+    <label>ID / URL Server</label>
+    <input id="serverUrl" type="text" placeholder="Masukkan ID atau URL server" style="width:100%;padding:12px;box-sizing:border-box;margin:6px 0 12px">
+
+    <label>Port</label>
+    <input id="serverPort" type="number" placeholder="Masukkan port" style="width:100%;padding:12px;box-sizing:border-box;margin:6px 0 12px">
+
+    <label>Sandi Stream</label>
+    <input id="streamPass" type="password" placeholder="Masukkan sandi stream" style="width:100%;padding:12px;box-sizing:border-box;margin:6px 0 12px">
+
+    <label>Admin Siaran</label>
+    <input id="streamAdmin" type="text" placeholder="Nama admin siaran" style="width:100%;padding:12px;box-sizing:border-box;margin:6px 0 16px">
+
+    <button type="button" onclick="alert('Pengaturan sudah diisi. Tombol ini belum terhubung ke server streaming.')" style="width:100%;padding:14px;background:#d71920;color:white;border:0;border-radius:8px;font-weight:bold">🔴 GO LIVE</button>
+  </section>
+
 </body>
 </html>
