@@ -252,5 +252,30 @@ function terbitkanInfo() {
 }
 </script>
 
+let demenMicStream = null;
+
+async function aktifkanMic() {
+  try {
+    demenMicStream = await navigator.mediaDevices.getUserMedia({
+      audio: true
+    });
+
+    document.getElementById("statusMic").textContent =
+      "Mic aktif - suara berhasil masuk ke Studio";
+  } catch (error) {
+    document.getElementById("statusMic").textContent =
+      "Mic belum aktif. Periksa izin mikrofon dan sambungan mixer.";
+  }
+}
+
+function matikanMic() {
+  if (demenMicStream) {
+    demenMicStream.getTracks().forEach(track => track.stop());
+    demenMicStream = null;
+  }
+
+  document.getElementById("statusMic").textContent = "Mic mati";
+}
+
 </body>
 </html>
