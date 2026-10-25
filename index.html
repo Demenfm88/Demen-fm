@@ -226,5 +226,115 @@ function openYouTube(){
 </script>
 
 
+<!-- MEDIA PLAYER YOUTUBE DEMEN FM -->
+<section id="youtube-player" style="
+  max-width:600px;
+  margin:25px auto;
+  padding:18px;
+  background:#151515;
+  color:white;
+  border:2px solid #e50914;
+  border-radius:15px;
+  font-family:Arial,sans-serif;
+  box-sizing:border-box;
+">
+  <h2 style="text-align:center;color:#ff3030;">
+    🎵 YouTube Player Demen FM
+  </h2>
+
+  <p style="text-align:center;">
+    Tempel link lagu YouTube pilihanmu
+  </p>
+
+  <input
+    id="ytLink"
+    type="url"
+    placeholder="https://www.youtube.com/watch?v=..."
+    style="
+      width:100%;
+      padding:12px;
+      border-radius:8px;
+      border:1px solid #777;
+      box-sizing:border-box;
+      margin-bottom:10px;
+      font-size:14px;
+    "
+  >
+
+  <button
+    onclick="putarLaguYT()"
+    style="
+      width:100%;
+      padding:13px;
+      background:#e50914;
+      color:white;
+      border:0;
+      border-radius:8px;
+      font-size:16px;
+      font-weight:bold;
+    "
+  >
+    ▶ PUTAR LAGU
+  </button>
+
+  <div id="ytHasil" style="margin-top:15px;"></div>
+
+  <p style="font-size:12px;color:#bbb;text-align:center;">
+    Demen FM — Emang Ndemenin!
+  </p>
+</section>
+
+<script>
+function putarLaguYT() {
+  const link = document.getElementById("ytLink").value.trim();
+  const hasil = document.getElementById("ytHasil");
+  let id = "";
+
+  try {
+    const url = new URL(link);
+
+    if (url.hostname === "youtu.be") {
+      id = url.pathname.split("/")[1] || "";
+    } else if (
+      url.hostname === "youtube.com" ||
+      url.hostname === "www.youtube.com" ||
+      url.hostname === "m.youtube.com" ||
+      url.hostname === "youtube-nocookie.com" ||
+      url.hostname === "www.youtube-nocookie.com"
+    ) {
+      if (url.pathname === "/watch") {
+        id = url.searchParams.get("v") || "";
+      } else if (
+        url.pathname.startsWith("/embed/") ||
+        url.pathname.startsWith("/shorts/") ||
+        url.pathname.startsWith("/live/")
+      ) {
+        id = url.pathname.split("/")[2] || "";
+      }
+    }
+  } catch (e) {}
+
+  if (!/^[a-zA-Z0-9_-]{11}$/.test(id)) {
+    hasil.innerHTML =
+      '<p style="color:#ff7777;">Link YouTube tidak valid. Periksa kembali.</p>';
+    return;
+  }
+
+  hasil.innerHTML = `
+    <div style="position:relative;width:100%;padding-top:56.25%;">
+      <iframe
+        src="https://www.youtube.com/embed/${id}"
+        title="Pemutar YouTube Demen FM"
+        style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;border-radius:10px;"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+      </iframe>
+    </div>
+  `;
+}
+</script>
+<!-- AKHIR MEDIA PLAYER YOUTUBE -->
+
 </body>
 </html>
