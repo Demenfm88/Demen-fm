@@ -88,3 +88,133 @@ small{color:#c4d3e4}
 <small>Musik lokal ini belum otomatis terkirim ke pendengar radio.</small>
 </div>
 </details>
+<details>
+<summary>Pemutar YouTube</summary>
+<div class="content">
+<label>Tempel link lagu YouTube</label>
+<input id="youtubeURL" placeholder="https://www.youtube.com/watch?v=...">
+<button onclick="bukaYouTube()">Buka Pemutar</button>
+<button class="red" onclick="tutupYouTube()">Tutup</button>
+<div id="youtubeStatus" class="status">Belum ada video dibuka.</div>
+<div id="youtubeBox" hidden>
+<iframe id="youtubePlayer" allowfullscreen></iframe>
+</div>
+<small>YouTube bisa menampilkan iklan. Suara video tidak otomatis masuk ke siaran radio.</small>
+</div>
+</details>
+
+<details>
+<summary>Mikrofon Studio</summary>
+<div class="content">
+<button onclick="aktifkanMic()">Aktifkan Mic</button>
+<button class="red" onclick="matikanMic()">Matikan Mic</button>
+<div id="statusMic" class="status">Mic mati.</div>
+<small>Mic aktif berarti browser mendapat akses mikrofon. Belum berarti suara sudah terkirim ke pendengar.</small>
+</div>
+</details>
+
+<details>
+<summary>GO LIVE dan Server Radio</summary>
+<div class="content">
+<label>Alamat halaman radio pendengar</label>
+<input id="radioPage" value="https://demenfm88.radio12345.com">
+<button onclick="bukaRadio()">Buka Halaman Radio</button>
+<button onclick="cekServer()">Cek Koneksi</button>
+<button class="red" onclick="goLive()">GO LIVE</button>
+<div id="liveStatus" class="status">Belum melakukan pemeriksaan.</div>
+<p>Untuk siaran langsung, gunakan aplikasi encoder yang terhubung ke server SHOUTcast. Tombol di halaman ini belum mengirim audio ke server.</p>
+</div>
+</details>
+
+<details>
+<summary>Informasi untuk Pendengar</summary>
+<div class="content">
+<label>Pilih gambar informasi</label>
+<input id="infoImage" type="file" accept="image/*">
+
+<label>Judul informasi</label>
+<input id="infoTitle" placeholder="Judul informasi">
+
+<label>Keterangan</label>
+<textarea id="infoDescription" rows="4" placeholder="Tulis informasi untuk pendengar"></textarea>
+
+<button onclick="pratinjauInfo()">Lihat Pratinjau</button>
+<button class="red" onclick="bersihkanInfo()">Bersihkan</button>
+<div id="infoPreview" class="status">Pratinjau informasi akan muncul di sini.</div>
+<small>Pratinjau ini hanya tampil di halaman studio. Untuk menerbitkan ke halaman pendengar dibutuhkan penyimpanan bersama.</small>
+</div>
+</details>
+
+<footer style="text-align:center;padding:20px;color:#c4d3e4">
+Demen FM 88 • Emang Ndemenin • Radionya Cilacap
+</footer>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+
+function simpanPengaturan(){
+  $("statusPengaturan").textContent =
+    $("protocol").value+" • "+$("bitrate").value+
+    " • "+$("sampleRate").value+" • "+$("channels").value+
+    ". Pilihan ditampilkan saja; server belum diubah.";
+}
+
+let songs=[];
+let songIndex=-1;
+let songURL=null;
+
+$("musicFiles").addEventListener("change",()=>{
+  if(songURL){URL.revokeObjectURL(songURL);songURL=null;}
+  songs=Array.from($("musicFiles").files||[]);
+  songIndex=-1;
+  $("songList").replaceChildren();
+
+  songs.forEach((file,index)=>{
+    const li=document.createElement("li");
+    const btn=document.createElement("button");
+    btn.textContent=file.name;
+    btn.onclick=()=>pilihLagu(index,true);
+    li.appendChild(btn);
+    $("songList").appendChild(li);
+  });
+
+  if(songs.length)pilihLagu(0,false);
+});
+
+function pilihLagu(index,autoplay){
+  if(!songs.length)return;
+  if(index<0)index=songs.length-1;
+  if(index>=songs.length)index=0;
+  songIndex=index;
+  if(songURL)URL.revokeObjectURL(songURL);
+  songURL=URL.createObjectURL(songs[index]);
+  $("audioPlayer").src=songURL;
+  $("nowPlaying").textContent="Lagu: "+songs[index].name;
+  if(autoplay)$("audioPlayer").play().catch(()=>{});
+}
+
+function putar(){
+  if(!$("audioPlayer").src){
+    $("nowPlaying").textContent="Pilih file musik terlebih dahulu.";
+    return;
+  }
+  if($("audioPlayer").paused){
+    $("audioPlayer").play().catch(()=>{});
+  }else{
+    $("audioPlayer").pause();
+  }
+}
+
+function laguSebelum(){pilihLagu(songIndex-1,true);}
+function laguBerikut(){pilihLagu(songIndex+1,true);}
+
+function berhenti(){
+  $("audioPlayer").pause();
+  $("audioPlayer").currentTime=0;
+  $("nowPlaying").textContent="Musik dihentikan.";
+}
+
+$("audioPlayer").addEventListener("ended",()=>{
+  if(songs.length)pilihLagu(songIndex+1,true);
+});
