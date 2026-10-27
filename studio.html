@@ -1,330 +1,90 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Studio Admin Demen FM</title>
-  <style>
-    body {
-      background: #111;
-      color: white;
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    .studio {
-      max-width: 500px;
-      margin: auto;
-      border: 2px solid red;
-      border-radius: 12px;
-      padding: 20px;
-    }
-    h2 { color: red; }
-    input, button {
-      box-sizing: border-box;
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border-radius: 6px;
-    }
-    button {
-      background: red;
-      color: white;
-      border: 0;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio Admin Demen FM</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#071b36;color:white;font-family:Arial,sans-serif}
+header{background:#087eaa;text-align:center;padding:20px}
+h1{color:#ffd84d;margin:0}
+main{max-width:800px;margin:auto;padding:12px}
+details{background:#102a4a;border:1px solid #36516e;border-radius:12px;margin:12px 0;overflow:hidden}
+summary{padding:15px;background:#0b203b;font-size:17px;font-weight:bold;cursor:pointer}
+.content{padding:14px}
+label{display:block;margin:12px 0 6px;font-weight:bold}
+input,select,textarea{width:100%;padding:11px;border-radius:7px;margin-bottom:8px}
+button{background:#087eaa;color:white;border:0;border-radius:8px;padding:12px;margin:4px 2px;font-weight:bold}
+.red{background:#df354f}
+.yellow{background:#ffd84d;color:#102033}
+.status{background:#061426;padding:12px;border-radius:8px;margin-top:10px;overflow-wrap:anywhere}
+audio,iframe{width:100%;margin-top:10px}
+iframe{aspect-ratio:16/9;border:0}
+img{max-width:100%}
+small{color:#c4d3e4}
+</style>
 </head>
 <body>
-  <div class="studio">
-    <h2>Studio Admin Demen FM</h2>
-    <p>Panel kontrol radio Demen FM</p>
+<header>
+<h1>DEMEN FM 88</h1>
+<p>Studio Admin — Emang Ndemenin</p>
+<p>Radionya Cilacap</p>
+</header>
+<main>
 
-<h3>🎵 Musik dan Auto DJ</h3>
-<p>Pilih lagu dari HP untuk diputar berurutan.</p>
-<input type="file" id="musicFiles" accept="audio/*" multiple>
-<audio id="audioPlayer" controls style="width:100%"></audio>
-<p id="nowPlaying">Belum ada lagu dipilih.</p>
-<button type="button" id="nextSong">Lagu Berikutnya</button>
-<ul id="songList"></ul>
-<script>
-const musicFiles = document.getElementById('musicFiles');
-const audioPlayer = document.getElementById('audioPlayer');
-const nextSong = document.getElementById('nextSong');
-const nowPlaying = document.getElementById('nowPlaying');
-const songList = document.getElementById('songList');
-let songs = [];
-let currentIndex = 0;
-let currentURL = '';
-
-function playSong(index) {
-  if (!songs.length) return;
-  currentIndex = (index + songs.length) % songs.length;
-  if (currentURL) URL.revokeObjectURL(currentURL);
-  currentURL = URL.createObjectURL(songs[currentIndex]);
-  audioPlayer.src = currentURL;
-  nowPlaying.textContent = 'Sedang diputar: ' + songs[currentIndex].name;
-  audioPlayer.play().catch(() => {});
-}
-
-musicFiles.addEventListener('change', function() {
-  songs = Array.from(this.files || []);
-  currentIndex = 0;
-  songList.innerHTML = '';
-  songs.forEach((song, index) => {
-    const item = document.createElement('li');
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.textContent = song.name;
-    button.addEventListener('click', () => playSong(index));
-    item.appendChild(button);
-    songList.appendChild(item);
-  });
-  if (songs.length) playSong(0);
-  else nowPlaying.textContent = 'Belum ada lagu dipilih.';
-});
-
-audioPlayer.addEventListener('ended', () => {
-  if (songs.length) playSong(currentIndex + 1);
-});
-
-nextSong.addEventListener('click', () => {
-  if (songs.length) playSong(currentIndex + 1);
-});
-</script>
-
-<hr>
-<h3>▶️ Pemutar YouTube</h3>
-<p>Masukkan tautan video YouTube.</p>
-<input id="youtubeURL" type="url" placeholder="Tempel tautan YouTube di sini">
-<button type="button" id="openYouTube">Putar YouTube</button>
-<div id="youtubePlayer"></div>
-
-<script>
-document.getElementById('openYouTube').addEventListener('click', function() {
-  const url = document.getElementById('youtubeURL').value.trim();
-  let videoID = '';
-
-  try {
-    const link = new URL(url);
-    if (link.hostname === 'youtu.be') {
-      videoID = link.pathname.slice(1).split('/')[0];
-    } else if (
-      link.hostname === 'youtube.com' ||
-      link.hostname.endsWith('.youtube.com')
-    ) {
-      if (link.pathname === '/watch') {
-        videoID = link.searchParams.get('v') || '';
-      } else if (link.pathname.startsWith('/embed/')) {
-        videoID = link.pathname.split('/')[2] || '';
-      } else if (link.pathname.startsWith('/shorts/')) {
-        videoID = link.pathname.split('/')[2] || '';
-      }
-    }
-  } catch (e) {}
-
-  const area = document.getElementById('youtubePlayer');
-  area.innerHTML = '';
-
-  if (!/^[a-zA-Z0-9_-]{11}$/.test(videoID)) {
-    area.textContent = 'Tautan YouTube belum benar. Coba tautan video biasa.';
-    return;
-  }
-
-  const frame = document.createElement('iframe');
-  frame.src = 'https://www.youtube-nocookie.com/embed/' + videoID;
-  frame.width = '100%';
-  frame.height = '230';
-  frame.allow = 'autoplay; encrypted-media; picture-in-picture';
-  frame.allowFullscreen = true;
-  frame.style.border = '0';
-  area.appendChild(frame);
-});
-</script>
-
-<hr>
-<h3>🖼️ Unggah Gambar Informasi</h3>
-<p>Pilih gambar dari HP untuk melihat pratinjaunya.</p>
-<input type="file" id="imageUpload" accept="image/*" multiple>
-<div id="imagePreview" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
-
-<script>
-document.getElementById('imageUpload').addEventListener('change', function() {
-  const area = document.getElementById('imagePreview');
-  area.innerHTML = '';
-
-  Array.from(this.files || []).forEach(file => {
-    const img = document.createElement('img');
-    img.src = URL.createObjectURL(file);
-    img.alt = file.name;
-    img.style.width = '100%';
-    img.style.borderRadius = '8px';
-    area.appendChild(img);
-  });
-});
-</script>
-
-    <button onclick="history.back()">Kembali</button>
-  </div>
-
-  <section style="background:#181818;color:white;padding:16px;border-radius:12px;margin:16px 0">
-    <h2 style="color:#ff3333">🎙️ Pengaturan Live Demen FM</h2>
-
-    <label>ID / URL Server</label>
-    <input id="serverUrl" type="text" placeholder="Masukkan ID atau URL server" style="width:100%;padding:12px;box-sizing:border-box;margin:6px 0 12px">
-
-    <label>Port</label>
-    <input id="serverPort" type="number" placeholder="Masukkan port" style="width:100%;padding:12px;box-sizing:border-box;margin:6px 0 12px">
-
-    <label>Sandi Stream</label>
-    <input id="streamPass" type="password" placeholder="Masukkan sandi stream" style="width:100%;padding:12px;box-sizing:border-box;margin:6px 0 12px">
-
-    <label>Admin Siaran</label>
-    <input id="streamAdmin" type="text" placeholder="Nama admin siaran" style="width:100%;padding:12px;box-sizing:border-box;margin:6px 0 16px">
-
-
-
-<label>Jenis Server</label>
-<select id="jenisServer" style="width:100%;padding:12px;margin:6px 0 12px;box-sizing:border-box">
-  <option value="shoutcast1">SHOUTcast 1</option>
+<details open>
+<summary>Pengaturan Siaran</summary>
+<div class="content">
+<label>Protokol</label>
+<select id="protocol">
+<option>SHOUTcast 1</option>
+<option>SHOUTcast 2</option>
+<option>Icecast</option>
 </select>
 
-<label>Format Audio</label>
-<select id="formatAudio" style="width:100%;padding:12px;margin:6px 0 12px;box-sizing:border-box">
-  <option value="mp3">MP3</option>
-</select>
+<label>Host / IP server</label>
+<input id="host" placeholder="Host server radio">
+
+<label>Port</label>
+<input id="port" type="number" placeholder="Port server">
 
 <label>Bitrate</label>
-<select id="bitrateAudio" style="width:100%;padding:12px;margin:6px 0 12px;box-sizing:border-box">
-  <option value="96">96 kbps</option>
-  <option value="64">64 kbps</option>
-  <option value="128">128 kbps</option>
+<select id="bitrate">
+<option>64 kbps</option>
+<option selected>96 kbps</option>
+<option>128 kbps</option>
 </select>
 
-<label>Sample Rate</label>
-<select id="sampleAudio" style="width:100%;padding:12px;margin:6px 0 12px;box-sizing:border-box">
-  <option value="44100">44100 Hz</option>
-  <option value="48000">48000 Hz</option>
+<label>Sample rate</label>
+<select id="sampleRate">
+<option selected>44100 Hz</option>
+<option>48000 Hz</option>
 </select>
 
-<label>Channel Audio</label>
-<select id="channelAudio" style="width:100%;padding:12px;margin:6px 0 16px;box-sizing:border-box">
-  <option value="stereo">Stereo</option>
-  <option value="mono">Mono</option>
+<label>Saluran audio</label>
+<select id="channels">
+<option>Stereo</option>
+<option>Mono</option>
 </select>
 
-<button type="button"
-onclick="alert('Untuk siaran, gunakan aplikasi encoder Demen FM yang terhubung ke Listen2MyRadio.')"
-style="width:100%;padding:14px;background:#d71920;color:white;border:0;border-radius:8px;font-weight:bold">
-🔴 GO LIVE
-</button>
- </section>
-
-<section style="background:#181818;color:white;padding:16px;border-radius:12px;margin:16px 0">
-  <h2 style="color:#ff3333">📰 Info Terbaru Demen FM</h2>
-
-  <label>Pilih Gambar dari HP</label>
-  <input type="file" id="infoGambar" accept="image/*" onchange="pratinjauInfo()" style="display:block;width:100%;margin:12px 0">
-
-  <img id="lihatGambar" style="display:none;width:100%;max-height:300px;object-fit:contain;border-radius:10px;margin-bottom:12px">
-
-  <label>Judul Informasi</label>
-  <input id="judulInfo" type="text" placeholder="Contoh: Info terbaru Demen FM" style="width:100%;box-sizing:border-box;padding:12px;margin:8px 0 14px">
-
-  <label>Deskripsi / Keterangan</label>
-  <textarea id="deskripsiInfo" placeholder="Tulis keterangan untuk pendengar..." style="width:100%;box-sizing:border-box;padding:12px;margin:8px 0 14px;min-height:90px"></textarea>
-
-
-  <button type="button" onclick="pratinjauInfo()" style="width:100%;padding:13px;background:#b91c1c;color:white;border:0;border-radius:8px;font-weight:bold">
-    LIHAT PRATINJAU
-  </button>
-
-
-<button type="button" onclick="terbitkanInfo()" style="width:100%;padding:14px;background:#16803c;color:white;border:0;border-radius:8px;font-weight:bold;margin-top:10px">
-  📢 TERBITKAN INFORMASI
-</button>
-
-
-
-
-  <p id="statusInfo">Pilih gambar dan isi judul serta keterangannya.</p>
-</section>
-
-<script>
-function pratinjauInfo() {
-  const file = document.getElementById('infoGambar').files[0];
-  const gambar = document.getElementById('lihatGambar');
-  const status = document.getElementById('statusInfo');
-
-  if (file) {
-    gambar.src = URL.createObjectURL(file);
-    gambar.style.display = 'block';
-  }
-
-  const judul = document.getElementById('judulInfo').value.trim();
-  const deskripsi = document.getElementById('deskripsiInfo').value.trim();
-
-  status.textContent = judul && deskripsi && file
-    ? 'Pratinjau siap. Belum diterbitkan ke halaman pendengar.'
-    : 'Lengkapi gambar, judul, dan keterangan.';
-}
-</script>
-
-<script>
-function terbitkanInfo() {
-  const file = document.getElementById('infoGambar').files[0];
-  const judul = document.getElementById('judulInfo').value.trim();
-  const deskripsi = document.getElementById('deskripsiInfo').value.trim();
-  const status = document.getElementById('statusInfo');
-
-  if (!file || !judul || !deskripsi) {
-    status.textContent = 'Lengkapi gambar, judul, dan keterangan dahulu.';
-    return;
-  }
-
-  status.textContent = 'Data lengkap. Penyimpanan dan penerbitan ke halaman pendengar belum terhubung.';
-}
-
-
-
-let demenMicStream = null;
-
-async function aktifkanMic() {
-  try {
-    demenMicStream = await navigator.mediaDevices.getUserMedia({
-      audio: true
-    });
-
-    document.getElementById("statusMic").textContent =
-      "Mic aktif - suara berhasil masuk ke Studio";
-  } catch (error) {
-    document.getElementById("statusMic").textContent =
-      "Mic belum aktif. Periksa izin mikrofon dan sambungan mixer.";
-  }
-}
-
-function matikanMic() {
-  if (demenMicStream) {
-    demenMicStream.getTracks().forEach(track => track.stop());
-    demenMicStream = null;
-  }
-
-  document.getElementById("statusMic").textContent = "Mic mati";
-}
-</script>
-
-<!-- KONTROL MIKROFON DEMEN FM -->
-<div style="background:#181818;color:white;padding:15px;border-radius:12px;margin:15px 0;text-align:center;">
-  <h3 style="color:#ff3333;">🎙️ Mikrofon Studio</h3>
-
-  <button onclick="aktifkanMic()" style="background:#d90000;color:white;padding:12px 18px;border:0;border-radius:8px;margin:5px;">
-    AKTIFKAN MIC
-  </button>
-
-  <button onclick="matikanMic()" style="background:#444;color:white;padding:12px 18px;border:0;border-radius:8px;margin:5px;">
-    MATIKAN MIC
-  </button>
-
-  <p id="statusMic">Mic belum diaktifkan</p>
+<button onclick="simpanPengaturan()">Simpan Pengaturan</button>
+<div class="status" id="statusPengaturan">Pengaturan belum disimpan.</div>
 </div>
-</body>
-</html>
+</details>
+
+<details open>
+<summary>Pemutar Musik dari HP</summary>
+<div class="content">
+<label>Pilih file lagu</label>
+<input id="musicFiles" type="file" accept="audio/*" multiple>
+<audio id="audioPlayer" controls></audio>
+<button onclick="putar()">Putar</button>
+<button onclick="laguSebelum()">Sebelumnya</button>
+<button onclick="laguBerikut()">Berikutnya</button>
+<button class="red" onclick="berhenti()">Berhenti</button>
+<div class="status" id="nowPlaying">Belum ada lagu dipilih.</div>
+<ol id="songList"></ol>
+<small>Musik lokal ini belum otomatis terkirim ke pendengar radio.</small>
+</div>
+</details>
