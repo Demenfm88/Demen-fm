@@ -218,3 +218,145 @@ function berhenti(){
 $("audioPlayer").addEventListener("ended",()=>{
   if(songs.length)pilihLagu(songIndex+1,true);
 });
+function bukaYouTube(){
+  const value=$("youtubeURL").value.trim();
+  let id=null;
+
+  try{
+    const u=new URL(value);
+    if(u.hostname==="youtu.be"){
+      id=u.pathname.split("/").filter(Boolean)[0];
+    }else if(u.hostname.endsWith("youtube.com")){
+      if(u.pathname==="/watch"){
+        id=u.searchParams.get("v");
+      }else{
+        const p=u.pathname.split("/").filter(Boolean);
+        if(["embed","shorts","live"].includes(p[0]))id=p[1];
+      }
+    }
+  }catch(e){}
+
+  if(!id||!/^[\w-]{11}$/.test(id)){
+    $("youtubeStatus").textContent="Link YouTube belum valid.";
+    return;
+  }
+
+  $("youtubePlayer").src="https://www.youtube-nocookie.com/embed/"+id;
+  $("youtubeBox").hidden=false;
+  $("youtubeStatus").textContent="Pemutar dibuka. Tekan Putar pada video.";
+}
+
+function tutupYouTube(){
+  $("youtubePlayer").src="";
+  $("youtubeBox").hidden=true;
+  $("youtubeStatus").textContent="Pemutar YouTube ditutup.";
+}
+
+let micStream=null;
+
+async function aktifkanMic(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    $("statusMic").textContent="Browser tidak mendukung akses mikrofon. Buka melalui HTTPS.";
+    return;
+  }
+
+  try{
+    micStream=await navigator.mediaDevices.getUserMedia({audio:true});
+    $("statusMic").textContent="Mic aktif. Browser mendapat akses mikrofon, tetapi suara belum dikirim ke server.";
+  }catch(e){
+    $("statusMic").textContent="Mic gagal aktif. Periksa izin mikrofon.";
+  }
+}
+
+function matikanMic(){
+  if(micStream){
+    micStream.getTracks().forEach(track=>track.stop());
+    micStream=null;
+  }
+  $("statusMic").textContent="Mic mati.";
+}
+
+function bukaRadio(){
+  const value=$("radioPage").value.trim();
+  try{
+    const u=new URL(value);
+    if(!["https:","http:"].includes(u.protocol))throw new Error();
+    window.open(u.href,"_blank","noopener");
+  }catch(e){
+    $("liveStatus").textContent="Alamat radio tidak valid.";
+  }
+}
+
+async function cekServer(){
+  const host=$("host").value.trim();
+  const port=$("port").value.trim();
+
+  if(!host||!port){
+    $("liveStatus").textContent="Isi host dan port terlebih dahulu.";
+    return;
+  }
+
+  $("liveStatus").textContent="Mencoba memeriksa server. Browser mungkin membatasi pemeriksaan ini.";
+
+  try{
+    const r=await fetch("https://"+host+":"+port+"/",{mode:"cors",cache:"no-store"});
+    $("liveStatus").textContent="Server memberi respons HTTP "+r.status+". Ini belum membuktikan siaran aktif.";
+  }catch(e){
+    $("liveStatus").textContent="Koneksi belum dapat dipastikan. Browser mungkin membatasi pemeriksaan.";
+  }
+}
+
+function goLive(){
+  $("liveStatus").textContent="GO LIVE belum terhubung ke encoder. Gunakan aplikasi siaran untuk mengirim audio ke server radio.";
+}
+
+let infoURL=null;
+
+function pratinjauInfo(){
+  const box=$("infoPreview");
+  box.replaceChildren();
+
+  const h=document.createElement("h3");
+  h.textContent=$("infoTitle").value.trim()||"Info Demen FM";
+  box.appendChild(h);
+
+  const file=$("infoImage").files[0];
+
+  if(file&&file.type.startsWith("image/")){
+    if(infoURL)URL.revokeObjectURL(infoURL);
+    infoURL=URL.createObjectURL(file);
+
+    const img=document.createElement("img");
+    img.className="preview";
+    img.alt="Gambar informasi";
+    img.src=infoURL;
+    box.appendChild(img);
+  }
+
+  const p=document.createElement("p");
+  p.textContent=$("infoDescription").value.trim()||"Belum ada keterangan.";
+  box.appendChild(p);
+}
+
+function bersihkanInfo(){
+  $("infoImage").value="";
+  $("infoTitle").value="";
+  $("infoDescription").value="";
+  $("infoPreview").textContent="Pratinjau informasi akan muncul di sini.";
+
+  if(infoURL){
+    URL.revokeObjectURL(infoURL);
+    infoURL=null;
+  }
+}
+
+window.addEventListener("pagehide",()=>{
+  if(micStream){
+    micStream.getTracks().forEach(track=>track.stop());
+  }
+  if(songURL)URL.revokeObjectURL(songURL);
+  if(infoURL)URL.revokeObjectURL(infoURL);
+});
+</script>
+</body>
+</html>
