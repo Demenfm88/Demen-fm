@@ -184,7 +184,37 @@ document.getElementById('imageUpload').addEventListener('change', function() {
 <button type="button"
 onclick="alert('Untuk siaran, gunakan aplikasi encoder Demen FM yang terhubung ke Listen2MyRadio.')"
 style="width:100%;padding:14px;background:#d71920;color:white;border:0;border-radius:8px;font-weight:bold">
-🔴 GO LIVE
+
+<label>Jenis Server</label>
+<select id="jenisServer" style="width:100%;padding:12px;margin:6px 0 12px;box-sizing:border-box">
+  <option value="shoutcast1">SHOUTcast 1</option>
+</select>
+
+<label>Format Audio</label>
+<select id="formatAudio" style="width:100%;padding:12px;margin:6px 0 12px;box-sizing:border-box">
+  <option value="mp3">MP3</option>
+</select>
+
+<label>Bitrate</label>
+<select id="bitrateAudio" style="width:100%;padding:12px;margin:6px 0 12px;box-sizing:border-box">
+  <option value="96">96 kbps</option>
+  <option value="64">64 kbps</option>
+  <option value="128">128 kbps</option>
+</select>
+
+<label>Sample Rate</label>
+<select id="sampleAudio" style="width:100%;padding:12px;margin:6px 0 12px;box-sizing:border-box">
+  <option value="44100">44100 Hz</option>
+  <option value="48000">48000 Hz</option>
+</select>
+
+<label>Channel Audio</label>
+<select id="channelAudio" style="width:100%;padding:12px;margin:6px 0 16px;box-sizing:border-box">
+  <option value="stereo">Stereo</option>
+  <option value="mono">Mono</option>
+</select>
+
+  🔴 GO LIVE
 </button>
  </section>
 
