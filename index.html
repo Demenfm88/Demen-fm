@@ -224,7 +224,7 @@ function openYouTube(){
 }
 </script>
 
-
+<div hidden>
 <!-- MEDIA PLAYER YOUTUBE DEMEN FM -->
 <section id="youtube-player" style="
   max-width:600px;
@@ -317,9 +317,9 @@ function putarLaguYT() {
     hasil.innerHTML =
       '<p style="color:#ff7777;">Link YouTube tidak valid. Periksa kembali.</p>';
     return;
-  }
-
-  hasil.innerHTML = `
+  } 
+  
+ hasil.innerHTML = `
     <div style="position:relative;width:100%;padding-top:56.25%;">
       <iframe
         src="https://www.youtube.com/embed/${id}"
@@ -334,7 +334,9 @@ function putarLaguYT() {
 }
 </script>
 <!-- AKHIR MEDIA PLAYER YOUTUBE -->
-<div class="cstrEmbed" data-type="newStreamPlayer" data-publicToken="31a27733-74a7-4f58-9f98-7f7b857b3701" data-theme="light" data-color="2B8FDD" data-channelId="" data-rendered="false">
+</div>
+  
+  <div class="cstrEmbed" data-type="newStreamPlayer" data-publicToken="31a27733-74a7-4f58-9f98-7f7b857b3701" data-theme="light" data-color="2B8FDD" data-channelId="" data-rendered="false">
 <a href="https://www.caster.fm">Shoutcast Hosting</a> <a href="https://www.caster.fm">Stream Hosting</a> <a href="https://www.caster.fm">Radio Server Hosting</a></div>
 <script src="//cdn.cloud.caster.fm//widgets/embed.js"></script>
 
