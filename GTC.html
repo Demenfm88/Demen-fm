@@ -356,12 +356,129 @@ tampilkanIuran();
 
 <section id="kas">
   <div class="panel">
-    <h2>KAS ORGANISASI</h2>
-    <p>Total Kas Saat Ini:</p>
-    <div class="angka">Rp10.000</div>
-    <p class="info">Saldo contoh awal organisasi GTC.</p>
+    <h2>KAS ORGANISASI GTC</h2>
+
+    <p>JUMLAH KAS SAAT INI</p>
+    <div class="angka" id="saldoKas">Rp0</div>
+
+    <hr>
+
+    <h2>CATAT PENGELUARAN</h2>
+
+    <input type="text" id="keteranganKeluar"
+      placeholder="Keterangan pengeluaran"
+      style="width:100%;padding:12px;margin:8px 0;">
+
+    <input type="number" id="jumlahKeluar"
+      placeholder="Jumlah pengeluaran (Rp)"
+      min="1"
+      style="width:100%;padding:12px;margin:8px 0;">
+
+    <button onclick="simpanPengeluaran()"
+      style="background:#d6a92e;padding:12px;border:0;border-radius:8px;font-weight:bold;">
+      SIMPAN PENGELUARAN
+    </button>
+  </div>
+
+  <div class="panel">
+    <h2>RINGKASAN KAS</h2>
+    <p>Total uang masuk: <b id="uangMasuk">Rp0</b></p>
+    <p>Total pengeluaran: <b id="uangKeluar">Rp0</b></p>
+    <p>Saldo akhir: <b id="saldoAkhir">Rp0</b></p>
+  </div>
+
+  <div class="panel">
+    <h2>RIWAYAT PENGELUARAN</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Keterangan</th>
+          <th>Jumlah</th>
+        </tr>
+      </thead>
+      <tbody id="riwayatKeluar"></tbody>
+    </table>
   </div>
 </section>
+
+<script>
+let catatanKeluar = JSON.parse(
+  localStorage.getItem("pengeluaranGTC") || "[]"
+);
+
+function simpanPengeluaran() {
+  let keterangan = document.getElementById("keteranganKeluar").value.trim();
+  let jumlah = Number(document.getElementById("jumlahKeluar").value);
+
+  if (!keterangan || jumlah <= 0) {
+    alert("Isi keterangan dan jumlah pengeluaran!");
+    return;
+  }
+
+  if (jumlah > hitungUangMasuk() - hitungUangKeluar()) {
+    alert("Saldo kas tidak mencukupi!");
+    return;
+  }
+
+  catatanKeluar.push({
+    keterangan: keterangan,
+    jumlah: jumlah
+  });
+
+  localStorage.setItem(
+    "pengeluaranGTC",
+    JSON.stringify(catatanKeluar)
+  );
+
+  document.getElementById("keteranganKeluar").value = "";
+  document.getElementById("jumlahKeluar").value = "";
+
+  tampilkanKas();
+}
+
+function hitungUangMasuk() {
+  return catatanIuran.reduce(
+    (total, x) => total + Number(x.jumlah), 0
+  );
+}
+
+function hitungUangKeluar() {
+  return catatanKeluar.reduce(
+    (total, x) => total + Number(x.jumlah), 0
+  );
+}
+
+function tampilkanKas() {
+  let masuk = hitungUangMasuk();
+  let keluar = hitungUangKeluar();
+  let saldo = masuk - keluar;
+
+  function rp(n) {
+    return "Rp" + n.toLocaleString("id-ID");
+  }
+
+  document.getElementById("saldoKas").textContent = rp(saldo);
+  document.getElementById("uangMasuk").textContent = rp(masuk);
+  document.getElementById("uangKeluar").textContent = rp(keluar);
+  document.getElementById("saldoAkhir").textContent = rp(saldo);
+
+  let tabel = document.getElementById("riwayatKeluar");
+  tabel.innerHTML = "";
+
+  catatanKeluar.forEach((x, i) => {
+    tabel.innerHTML += `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${x.keterangan}</td>
+        <td>${rp(Number(x.jumlah))}</td>
+      </tr>
+    `;
+  });
+}
+
+tampilkanKas();
+</script>
 
 <section id="dokumentasi">
   <div class="panel">
