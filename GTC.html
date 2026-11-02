@@ -142,26 +142,90 @@ footer {
 </nav>
 
 <main>
-
 <section id="anggota" class="aktif">
   <div class="panel">
-    <h2>DATA ANGGOTA</h2>
+    <h2>DATA ANGGOTA GTC</h2>
+
+    <input
+      type="text"
+      id="namaAnggota"
+      placeholder="Masukkan nama anggota"
+      style="width:100%;padding:12px;border-radius:8px;margin-bottom:10px;"
+    >
+
+    <button onclick="tambahAnggota()"
+      style="background:#d6a92e;padding:12px;border:0;border-radius:8px;font-weight:bold;">
+      + TAMBAH ANGGOTA
+    </button>
+
     <table>
-      <tr>
-        <th>No.</th>
-        <th>Nama Anggota</th>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td>LUTFI AR RAFFI</td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>ANDI</td>
-      </tr>
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Nama Anggota</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="daftarAnggota"></tbody>
     </table>
+
+    <p id="jumlahAnggota" class="info"></p>
   </div>
 </section>
+
+<script>
+let anggota = [
+  "TRI WANTORO",
+  "ANDI",
+  "LUTFI AR RAFFI"
+];
+
+function tampilkanAnggota() {
+  let tabel = document.getElementById("daftarAnggota");
+  tabel.innerHTML = "";
+
+  anggota.forEach(function(nama, index) {
+    tabel.innerHTML += `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${nama}</td>
+        <td>
+          <button onclick="hapusAnggota(${index})"
+            style="background:#c0392b;color:white;border:0;padding:7px;border-radius:5px;">
+            Hapus
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("jumlahAnggota").textContent =
+    "Jumlah anggota: " + anggota.length + " orang";
+}
+
+function tambahAnggota() {
+  let input = document.getElementById("namaAnggota");
+  let nama = input.value.trim();
+
+  if (nama === "") {
+    alert("Masukkan nama anggota terlebih dahulu");
+    return;
+  }
+
+  anggota.push(nama.toUpperCase());
+  input.value = "";
+  tampilkanAnggota();
+}
+
+function hapusAnggota(index) {
+  if (confirm("Hapus anggota ini?")) {
+    anggota.splice(index, 1);
+    tampilkanAnggota();
+  }
+}
+
+tampilkanAnggota();
+</script>
 
 <section id="iuran">
   <div class="panel">
