@@ -229,24 +229,130 @@ tampilkanAnggota();
 
 <section id="iuran">
   <div class="panel">
-    <h2>DAFTAR IURAN WAJIB</h2>
+    <h2>PEMBAYARAN IURAN GTC</h2>
+
+    <label>Bulan Pembayaran</label>
+    <input type="month" id="bulanIuran"
+      style="width:100%;padding:12px;margin:8px 0;">
+
+    <label>Nama Anggota</label>
+    <input type="text" id="namaIuran"
+      placeholder="Masukkan nama anggota"
+      style="width:100%;padding:12px;margin:8px 0;">
+
+    <label>Jumlah Pembayaran (Rp)</label>
+    <input type="number" id="jumlahIuran"
+      placeholder="Contoh: 10000"
+      min="1"
+      style="width:100%;padding:12px;margin:8px 0;">
+
+    <button onclick="simpanIuran()"
+      style="background:#d6a92e;padding:12px;border:0;border-radius:8px;font-weight:bold;">
+      SIMPAN PEMBAYARAN
+    </button>
+  </div>
+
+  <div class="panel">
+    <h2>RINGKASAN IURAN</h2>
+    <p>Total bulan ini:</p>
+    <div class="angka" id="totalBulan">Rp0</div>
+
+    <p>Total seluruh kas masuk:</p>
+    <div class="angka" id="totalSemua">Rp0</div>
+  </div>
+
+  <div class="panel">
+    <h2>RIWAYAT PEMBAYARAN</h2>
     <table>
-      <tr>
-        <th>Nama</th>
-        <th>Jumlah Iuran</th>
-      </tr>
-      <tr>
-        <td>LUTFI AR RAFFI</td>
-        <td>Rp10.000</td>
-      </tr>
-      <tr>
-        <td>ANDI</td>
-        <td>Rp10.000</td>
-      </tr>
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Nama</th>
+          <th>Jumlah</th>
+        </tr>
+      </thead>
+      <tbody id="riwayatIuran"></tbody>
     </table>
-    <p class="info">Data ini masih berupa contoh awal.</p>
   </div>
 </section>
+
+<script>
+let catatanIuran = JSON.parse(
+  localStorage.getItem("catatanIuranGTC") || "[]"
+);
+
+let bulanSekarang = new Date().toISOString().slice(0, 7);
+document.getElementById("bulanIuran").value = bulanSekarang;
+
+function rupiah(nilai) {
+  return "Rp" + Number(nilai).toLocaleString("id-ID");
+}
+
+function simpanIuran() {
+  let nama = document.getElementById("namaIuran").value.trim();
+  let jumlah = Number(document.getElementById("jumlahIuran").value);
+  let bulan = document.getElementById("bulanIuran").value;
+
+  if (!nama || jumlah <= 0 || !bulan) {
+    alert("Lengkapi nama, bulan, dan jumlah pembayaran!");
+    return;
+  }
+
+  catatanIuran.push({
+    nama: nama.toUpperCase(),
+    jumlah: jumlah,
+    bulan: bulan
+  });
+
+  localStorage.setItem(
+    "catatanIuranGTC",
+    JSON.stringify(catatanIuran)
+  );
+
+  document.getElementById("namaIuran").value = "";
+  document.getElementById("jumlahIuran").value = "";
+
+  tampilkanIuran();
+}
+
+function tampilkanIuran() {
+  let bulan = document.getElementById("bulanIuran").value;
+  let dataBulan = catatanIuran.filter(x => x.bulan === bulan);
+
+  let totalBulan = dataBulan.reduce(
+    (total, x) => total + x.jumlah, 0
+  );
+
+  let totalSemua = catatanIuran.reduce(
+    (total, x) => total + x.jumlah, 0
+  );
+
+  document.getElementById("totalBulan").textContent =
+    rupiah(totalBulan);
+
+  document.getElementById("totalSemua").textContent =
+    rupiah(totalSemua);
+
+  let tabel = document.getElementById("riwayatIuran");
+  tabel.innerHTML = "";
+
+  dataBulan.forEach((x, i) => {
+    tabel.innerHTML += `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${x.nama}</td>
+        <td>${rupiah(x.jumlah)}</td>
+      </tr>
+    `;
+  });
+}
+
+document.getElementById("bulanIuran").addEventListener(
+  "change", tampilkanIuran
+);
+
+tampilkanIuran();
+</script>
 
 <section id="kas">
   <div class="panel">
