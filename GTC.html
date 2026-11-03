@@ -239,7 +239,6 @@ tampilkanAnggota();
 </script>
 
 
-      
 <section id="iuran">
   <div class="panel">
     <h2>PEMBAYARAN IURAN GTC</h2>
@@ -259,9 +258,14 @@ tampilkanAnggota();
       min="1"
       style="width:100%;padding:12px;margin:8px 0;">
 
-    <button onclick="simpanIuran()"
+    <button id="btnSimpanIuran" onclick="simpanIuran()"
       style="background:#d6a92e;padding:12px;border:0;border-radius:8px;font-weight:bold;">
       SIMPAN PEMBAYARAN
+    </button>
+
+    <button id="btnBatalEdit" onclick="batalEdit()"
+      style="display:none;background:#777;color:white;padding:12px;border:0;border-radius:8px;">
+      BATAL EDIT
     </button>
   </div>
 
@@ -282,6 +286,7 @@ tampilkanAnggota();
           <th>No.</th>
           <th>Nama</th>
           <th>Jumlah</th>
+          <th>Aksi</th>
         </tr>
       </thead>
       <tbody id="riwayatIuran"></tbody>
@@ -294,11 +299,20 @@ let catatanIuran = JSON.parse(
   localStorage.getItem("catatanIuranGTC") || "[]"
 );
 
+let editIndex = null;
+
 let bulanSekarang = new Date().toISOString().slice(0, 7);
 document.getElementById("bulanIuran").value = bulanSekarang;
 
 function rupiah(nilai) {
   return "Rp" + Number(nilai).toLocaleString("id-ID");
+}
+
+function simpanDataIuran() {
+  localStorage.setItem(
+    "catatanIuranGTC",
+    JSON.stringify(catatanIuran)
+  );
 }
 
 function simpanIuran() {
@@ -311,33 +325,88 @@ function simpanIuran() {
     return;
   }
 
-  catatanIuran.push({
-    nama: nama.toUpperCase(),
-    jumlah: jumlah,
-    bulan: bulan
-  });
+  if (editIndex !== null) {
+    catatanIuran[editIndex] = {
+      nama: nama.toUpperCase(),
+      jumlah: jumlah,
+      bulan: bulan
+    };
 
-  localStorage.setItem(
-    "catatanIuranGTC",
-    JSON.stringify(catatanIuran)
-  );
+    alert("Catatan iuran berhasil diperbarui!");
+  } else {
+    catatanIuran.push({
+      nama: nama.toUpperCase(),
+      jumlah: jumlah,
+      bulan: bulan
+    });
+
+    alert("Pembayaran berhasil disimpan!");
+  }
+
+  simpanDataIuran();
+  batalEdit();
+  tampilkanIuran();
+}
+
+function editIuran(index) {
+  let x = catatanIuran[index];
+
+  document.getElementById("namaIuran").value = x.nama;
+  document.getElementById("jumlahIuran").value = x.jumlah;
+  document.getElementById("bulanIuran").value = x.bulan;
+
+  editIndex = index;
+
+  document.getElementById("btnSimpanIuran").textContent =
+    "SIMPAN PERUBAHAN";
+
+  document.getElementById("btnBatalEdit").style.display =
+    "inline-block";
+
+  document.getElementById("namaIuran").scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
+function batalEdit() {
+  editIndex = null;
 
   document.getElementById("namaIuran").value = "";
   document.getElementById("jumlahIuran").value = "";
 
-  tampilkanIuran();
+  document.getElementById("btnSimpanIuran").textContent =
+    "SIMPAN PEMBAYARAN";
+
+  document.getElementById("btnBatalEdit").style.display =
+    "none";
+}
+
+function hapusIuran(index) {
+  if (confirm("Yakin ingin menghapus catatan pembayaran ini?")) {
+    catatanIuran.splice(index, 1);
+
+    simpanDataIuran();
+    batalEdit();
+    tampilkanIuran();
+
+    alert("Catatan berhasil dihapus!");
+  }
 }
 
 function tampilkanIuran() {
   let bulan = document.getElementById("bulanIuran").value;
-  let dataBulan = catatanIuran.filter(x => x.bulan === bulan);
+
+  let dataBulan = catatanIuran
+    .map((x, index) => ({ ...x, index }))
+    .filter(x => x.bulan === bulan);
 
   let totalBulan = dataBulan.reduce(
-    (total, x) => total + x.jumlah, 0
+    (total, x) => total + Number(x.jumlah), 0
   );
 
   let totalSemua = catatanIuran.reduce(
-    (total, x) => total + x.jumlah, 0
+    (total, x) => total + Number(x.jumlah), 0
   );
 
   document.getElementById("totalBulan").textContent =
@@ -350,13 +419,40 @@ function tampilkanIuran() {
   tabel.innerHTML = "";
 
   dataBulan.forEach((x, i) => {
-    tabel.innerHTML += `
-      <tr>
-        <td>${i + 1}</td>
-        <td>${x.nama}</td>
-        <td>${rupiah(x.jumlah)}</td>
-      </tr>
-    `;
+    let baris = document.createElement("tr");
+
+    let nomor = document.createElement("td");
+    nomor.textContent = i + 1;
+
+    let nama = document.createElement("td");
+    nama.textContent = x.nama;
+
+    let jumlah = document.createElement("td");
+    jumlah.textContent = rupiah(x.jumlah);
+
+    let aksi = document.createElement("td");
+
+    let tombolEdit = document.createElement("button");
+    tombolEdit.textContent = "EDIT";
+    tombolEdit.style.cssText =
+      "background:#087eaa;color:white;border:0;padding:7px;border-radius:5px;margin:2px;";
+    tombolEdit.onclick = () => editIuran(x.index);
+
+    let tombolHapus = document.createElement("button");
+    tombolHapus.textContent = "HAPUS";
+    tombolHapus.style.cssText =
+      "background:#c0392b;color:white;border:0;padding:7px;border-radius:5px;margin:2px;";
+    tombolHapus.onclick = () => hapusIuran(x.index);
+
+    aksi.appendChild(tombolEdit);
+    aksi.appendChild(tombolHapus);
+
+    baris.appendChild(nomor);
+    baris.appendChild(nama);
+    baris.appendChild(jumlah);
+    baris.appendChild(aksi);
+
+    tabel.appendChild(baris);
   });
 }
 
@@ -366,6 +462,8 @@ document.getElementById("bulanIuran").addEventListener(
 
 tampilkanIuran();
 </script>
+
+      
 
 <section id="kas">
   <div class="panel">
