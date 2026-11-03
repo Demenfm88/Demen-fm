@@ -153,33 +153,39 @@ footer {
       style="width:100%;padding:12px;border-radius:8px;margin-bottom:10px;"
     >
 
-    <button onclick="tambahAnggota()"
-      style="background:#d6a92e;padding:12px;border:0;border-radius:8px;font-weight:bold;">
-      + TAMBAH ANGGOTA
-    </button>
 
-    <table>
-      <thead>
-        <tr>
-          <th>No.</th>
-          <th>Nama Anggota</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody id="daftarAnggota"></tbody>
-    </table>
+<button onclick="tambahAnggota()"
+  style="background:#d6a92e;padding:12px;border:0;border-radius:8px;font-weight:bold;">
+  + TAMBAH ANGGOTA
+</button>
 
-    <p id="jumlahAnggota" class="info"></p>
-  </div>
-</section>
+<table>
+  <thead>
+    <tr>
+      <th>No.</th>
+      <th>Nama Anggota</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody id="daftarAnggota"></tbody>
+</table>
+
+<p id="jumlahAnggota" class="info"></p>
 
 <script>
-let anggota = [
+// Ambil data anggota yang sudah tersimpan
+let anggota = JSON.parse(localStorage.getItem("anggotaGTC")) || [
   "TRI WANTORO",
   "ANDI",
   "LUTFI AR RAFFI"
 ];
 
+// Simpan otomatis
+function simpanAnggota() {
+  localStorage.setItem("anggotaGTC", JSON.stringify(anggota));
+}
+
+// Tampilkan daftar anggota
 function tampilkanAnggota() {
   let tabel = document.getElementById("daftarAnggota");
   tabel.innerHTML = "";
@@ -203,6 +209,7 @@ function tampilkanAnggota() {
     "Jumlah anggota: " + anggota.length + " orang";
 }
 
+// Tambah anggota
 function tambahAnggota() {
   let input = document.getElementById("namaAnggota");
   let nama = input.value.trim();
@@ -213,20 +220,26 @@ function tambahAnggota() {
   }
 
   anggota.push(nama.toUpperCase());
+  simpanAnggota();
   input.value = "";
   tampilkanAnggota();
 }
 
+// Hapus anggota
 function hapusAnggota(index) {
   if (confirm("Hapus anggota ini?")) {
     anggota.splice(index, 1);
+    simpanAnggota();
     tampilkanAnggota();
   }
 }
 
+simpanAnggota();
 tampilkanAnggota();
 </script>
 
+
+      
 <section id="iuran">
   <div class="panel">
     <h2>PEMBAYARAN IURAN GTC</h2>
