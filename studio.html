@@ -4,150 +4,228 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Master Console Demen FM 88</title>
+<title>Master Console - Demen FM 88</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#071426;color:#fff;font-family:Arial,sans-serif}
-header{background:linear-gradient(120deg,#07547e,#079bb5);padding:24px 12px;text-align:center}
-header h1{margin:0;color:#ffe16b;font-size:27px}
-header p{margin:8px 0 0;font-size:13px}
-main{max-width:650px;margin:auto;padding:15px}
-.panel{background:#102943;border:1px solid #285071;border-radius:16px;padding:17px;margin-bottom:15px}
-h2{font-size:18px;margin:0 0 16px;color:#ffe16b}
-.status{text-align:center;padding:15px;font-size:20px;font-weight:bold;color:#ffcf52}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-button{border:0;border-radius:10px;padding:16px;font-size:16px;font-weight:bold;color:white;width:100%;margin:4px 0;cursor:pointer}
-.green{background:#15975c}
-.red{background:#bd3944}
-.blue{background:#087eaa}
-.gray{background:#53677c}
-.control{margin:17px 0}
-.control label{display:flex;justify-content:space-between;margin-bottom:10px}
-input[type=range]{width:100%;accent-color:#13c78a}
-input:disabled{opacity:.5}
-small{color:#a9bfd3}
-.meter{height:13px;background:#263d53;border-radius:20px;overflow:hidden}
-.meter span{display:block;height:100%;width:0%;background:#18c77e}
-footer{text-align:center;color:#8aa6bf;padding:20px;font-size:12px}
+body{margin:0;background:#071426;color:#eef6ff;font-family:Arial,sans-serif}
+header{background:linear-gradient(120deg,#075985,#087eaa);padding:22px 16px;text-align:center}
+header h1{margin:0;color:#ffe16b;font-size:25px}
+header p{margin:7px 0 0}
+main{max-width:900px;margin:auto;padding:14px}
+.panel{background:#10243b;border:1px solid #244563;border-radius:14px;padding:16px;margin:13px 0}
+h2{font-size:17px;color:#55d7ff;margin:0 0 14px}
+label{display:block;font-size:13px;color:#b9d2e8;margin:11px 0 6px}
+input,textarea{width:100%;padding:12px;border:1px solid #345775;border-radius:9px;background:#07182b;color:white;font-size:15px}
+textarea{min-height:75px;resize:vertical}
+button{border:0;border-radius:9px;padding:12px 16px;font-weight:bold;font-size:14px;cursor:pointer;margin:5px 3px 3px 0}
+.blue{background:#078fc2;color:white}
+.green{background:#13a66b;color:white}
+.red{background:#d94747;color:white}
+.gray{background:#34516c;color:white}
+button:disabled{opacity:.45;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.status{padding:12px;border-radius:9px;background:#07182b;margin:10px 0;font-weight:bold}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#e5a32c;margin-right:8px}
+video,iframe{width:100%;border:0;border-radius:10px;background:#000;aspect-ratio:16/9}
+.meter{height:9px;background:#263d55;border-radius:20px;overflow:hidden;margin-top:7px}
+.meter span{display:block;height:100%;width:0;background:#16c784}
+.range{width:100%;accent-color:#16b9ed}
+.small{font-size:12px;color:#9db6cc;line-height:1.5}
+.value{float:right;color:#ffe16b}
+footer{text-align:center;color:#829bb1;font-size:12px;padding:20px}
+@media(max-width:520px){.grid{grid-template-columns:1fr}header h1{font-size:22px}}
 </style>
 </head>
 <body>
 
 <header>
-<h1>🎙️ DEMEN FM 88</h1>
-<p>MASTER CONSOLE • EMANG NDEMENIN</p>
-<p>RADIONYA CILACAP</p>
+  <h1>🎙 DEMEN FM 88</h1>
+  <p>MASTER CONSOLE · Radionya Cilacap</p>
 </header>
 
 <main>
 
-<div class="panel">
-<h2>📡 STATUS SIARAN</h2>
-<div class="status" id="status">● MEMERIKSA SERVER</div>
-<div class="grid">
-<button class="green" onclick="aksi('start')">▶ START AUTO DJ</button>
-<button class="red" onclick="aksi('stop')">■ STOP AUTO DJ</button>
-</div>
-<button class="blue" onclick="cekStatus()">↻ PERIKSA STATUS</button>
-<div id="pesan" style="text-align:center;margin-top:10px"></div>
-</div>
+<section class="panel">
+  <h2>📡 STATUS STUDIO</h2>
+  <div class="status"><span class="dot" id="lamp"></span><span id="statusText">Memeriksa Auto DJ...</span></div>
+  <button class="blue" onclick="cekStatus()">CEK KONEKSI</button>
+  <p class="small">Status ini memeriksa proses Auto DJ di Termux/Debian. Belum menjadi bukti bahwa siaran sudah diterima Caster.fm.</p>
+</section>
 
-<div class="panel">
-<h2>🎚️ MASTER MIXER</h2>
+<section class="panel">
+  <h2>📝 INFORMASI SIARAN</h2>
+  <label>Judul acara</label>
+  <input id="judul" placeholder="Contoh: Musik Nonstop Demen FM">
+  <label>Nama penyiar</label>
+  <input id="penyiar" placeholder="Nama DJ / penyiar">
+  <label>Informasi untuk pendengar</label>
+  <textarea id="info" placeholder="Tulis informasi atau salam untuk pendengar..."></textarea>
+  <button class="blue" onclick="simpanInfo()">SIMPAN INFORMASI</button>
+  <p class="small" id="infoStatus">Informasi disimpan di browser HP ini.</p>
+</section>
 
-<div class="control">
-<label>MASTER VOLUME <b id="masterVal">80%</b></label>
-<input type="range" min="0" max="100" value="80"
-oninput="masterVal.textContent=this.value+'%'">
-</div>
+<section class="panel">
+  <h2>▶ YOUTUBE</h2>
+  <label>Tempel link YouTube</label>
+  <input id="youtubeURL" placeholder="https://www.youtube.com/watch?v=...">
+  <button class="blue" onclick="bukaYouTube()">PUTAR YOUTUBE</button>
+  <div style="margin-top:12px">
+    <iframe id="youtubePlayer" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  </div>
+  <p class="small">Pemutar YouTube hanya tampil di panel ini. Suaranya belum otomatis masuk ke siaran Caster.fm.</p>
+</section>
 
-<div class="control">
-<label>MUSIC VOLUME <b id="musicVal">80%</b></label>
-<input type="range" min="0" max="100" value="80"
-oninput="musicVal.textContent=this.value+'%'">
-</div>
+<section class="panel">
+  <h2>🎵 AUTO DJ</h2>
+  <div class="grid">
+    <button class="green" onclick="kendali('start')">▶ START AUTO DJ</button>
+    <button class="red" onclick="kendali('stop')">■ STOP AUTO DJ</button>
+  </div>
+  <p class="small" id="djInfo">Tombol ini mengirim perintah ke kontrol server lokal Termux/Debian.</p>
+</section>
 
-<div class="control">
-<label>MIC VOLUME <b id="micVal">70%</b></label>
-<input type="range" min="0" max="100" value="70"
-oninput="micVal.textContent=this.value+'%'">
-</div>
+<section class="panel">
+  <h2>🎚 MIXER AUDIO</h2>
 
-<small>Fader merupakan pengaturan tampilan. Belum mengubah level audio Liquidsoap.</small>
-</div>
+  <label>MASTER VOLUME <span class="value" id="masterVal">80%</span></label>
+  <input class="range" type="range" min="0" max="100" value="80" oninput="nilai('masterVal',this.value)">
 
-<div class="panel">
-<h2>🎤 MICROPHONE</h2>
-<div class="grid">
-<button class="green" onclick="micInfo('Mikrofon belum terhubung')">MIC ON</button>
-<button class="red" onclick="micInfo('Mikrofon belum terhubung')">MIC OFF</button>
-</div>
-<div id="micPesan" class="status" style="font-size:14px">INPUT MIC BELUM TERHUBUNG</div>
-</div>
+  <label>MUSIC VOLUME <span class="value" id="musicVal">80%</span></label>
+  <input class="range" type="range" min="0" max="100" value="80" oninput="nilai('musicVal',this.value)">
 
-<div class="panel">
-<h2>🔊 AUDIO METER</h2>
-<p>LEFT CHANNEL</p>
-<div class="meter"><span></span></div>
-<p>RIGHT CHANNEL</p>
-<div class="meter"><span></span></div>
-<small>Meter menunggu integrasi pembacaan audio langsung.</small>
-</div>
+  <label>MIC VOLUME <span class="value" id="micVal">80%</span></label>
+  <input class="range" type="range" min="0" max="100" value="80" oninput="nilai('micVal',this.value)">
 
-<div class="panel">
-<h2>🌐 SERVER CASTER.FM</h2>
-<p>Server: sapircast.caster.fm</p>
-<p>Port: 19950</p>
-<p>Format: MP3 / 96 kbps</p>
-<p>Mount: /ePKwz</p>
-<div class="status" style="font-size:15px">STATUS KONEKSI BELUM DIVERIFIKASI</div>
-</div>
+  <p class="small">Penggeser ini saat ini hanya tampilan kontrol. Belum mengubah volume audio Liquidsoap atau volume siaran.</p>
+</section>
 
-<div class="panel">
-<h2>📻 INFORMASI RADIO</h2>
-<p><b>DEМEN FM 88 - Radionya Cilacap</b></p>
-<p>Media Informasi dan Hiburan</p>
-<p>DEМEN FM EMANG NDEMENIN</p>
-</div>
+<section class="panel">
+  <h2>🎙 MICROPHONE HP</h2>
+  <button class="green" onclick="micOn()">AKTIFKAN TES MIC</button>
+  <button class="red" onclick="micOff()">MATIKAN MIC</button>
+  <div class="status" id="micStatus">Mikrofon belum dites.</div>
+  <audio id="micAudio" controls style="width:100%;display:none"></audio>
+  <p class="small">Tes ini meminta izin mikrofon dan memutar suara lokal di browser. Belum mengirim suara ke Caster.fm.</p>
+</section>
+
+<section class="panel">
+  <h2>🌐 SERVER CASTER.FM</h2>
+  <label>Server</label>
+  <input value="sapircast.caster.fm" readonly>
+  <label>Port</label>
+  <input value="19950" readonly>
+  <label>Mount</label>
+  <input value="/ePKwz" readonly>
+  <label>Format siaran</label>
+  <input value="MP3 · 96 kbps" readonly>
+  <p class="small">Informasi server tersimpan di panel. Jangan menaruh password sumber siaran di halaman publik GitHub.</p>
+</section>
 
 </main>
 
-<footer>MASTER CONSOLE DEMEN FM 88 © 2026</footer>
+<footer>DEＭEN FM 88 · EMANG NDEMENIN</footer>
 
 <script>
-const SERVER="http://127.0.0.1:8765";
+const CONTROL_SERVER = "http://127.0.0.1:8765";
+let micStream = null;
+
+function nilai(id,v){
+  document.getElementById(id).textContent=v+"%";
+}
+
+function simpanInfo(){
+  const data={
+    judul:document.getElementById("judul").value,
+    penyiar:document.getElementById("penyiar").value,
+    info:document.getElementById("info").value
+  };
+  localStorage.setItem("demenInfoSiaran",JSON.stringify(data));
+  document.getElementById("infoStatus").textContent="Informasi berhasil disimpan di browser HP ini.";
+}
+
+function muatInfo(){
+  try{
+    const d=JSON.parse(localStorage.getItem("demenInfoSiaran")||"{}");
+    document.getElementById("judul").value=d.judul||"";
+    document.getElementById("penyiar").value=d.penyiar||"";
+    document.getElementById("info").value=d.info||"";
+  }catch(e){}
+}
+
+function bukaYouTube(){
+  const url=document.getElementById("youtubeURL").value.trim();
+  let id="";
+  try{
+    const u=new URL(url);
+    if(u.hostname.includes("youtu.be")) id=u.pathname.slice(1);
+    else if(u.hostname.includes("youtube.com")) id=u.searchParams.get("v")||u.pathname.split("/").pop();
+  }catch(e){}
+  if(!id){
+    alert("Link YouTube belum benar.");
+    return;
+  }
+  document.getElementById("youtubePlayer").src=
+    "https://www.youtube-nocookie.com/embed/"+encodeURIComponent(id)+"?autoplay=1";
+}
 
 async function cekStatus(){
- try{
-  const r=await fetch(SERVER+"/status");
-  const d=await r.json();
-  document.getElementById("status").textContent=
-  d.status==="hidup"?"🟢 AUTO DJ BERJALAN":"🔴 AUTO DJ MATI";
- }catch(e){
-  document.getElementById("status").textContent=
-  "⚪ SERVER BELUM TERHUBUNG";
- }
+  const lamp=document.getElementById("lamp");
+  const t=document.getElementById("statusText");
+  try{
+    const r=await fetch(CONTROL_SERVER+"/status");
+    const d=await r.json();
+    if(d.status==="hidup"){
+      lamp.style.background="#16c784";
+      t.textContent="AUTO DJ HIDUP";
+    }else{
+      lamp.style.background="#e5a32c";
+      t.textContent="AUTO DJ MATI";
+    }
+  }catch(e){
+    lamp.style.background="#e34b4b";
+    t.textContent="KONTROL LOKAL BELUM TERHUBUNG";
+  }
 }
 
-async function aksi(perintah){
- const p=document.getElementById("pesan");
- p.textContent="Mengirim perintah...";
- try{
-  const r=await fetch(SERVER+"/"+perintah,{method:"POST"});
-  p.textContent=await r.text();
-  setTimeout(cekStatus,1000);
- }catch(e){
-  p.textContent="Server Termux belum terhubung";
- }
+async function kendali(perintah){
+  const info=document.getElementById("djInfo");
+  info.textContent="Mengirim perintah "+perintah+"...";
+  try{
+    const r=await fetch(CONTROL_SERVER+"/"+perintah,{method:"POST"});
+    if(!r.ok) throw new Error("Gagal");
+    info.textContent="Perintah terkirim. Memeriksa status...";
+    setTimeout(cekStatus,1000);
+  }catch(e){
+    info.textContent="Belum tersambung ke kontrol lokal. Pastikan server kontrol Termux/Debian berjalan.";
+  }
 }
 
-function micInfo(pesan){
- document.getElementById("micPesan").textContent=pesan;
+async function micOn(){
+  try{
+    micStream=await navigator.mediaDevices.getUserMedia({audio:true});
+    const audio=document.getElementById("micAudio");
+    audio.srcObject=micStream;
+    audio.style.display="block";
+    audio.play();
+    document.getElementById("micStatus").textContent="Izin mikrofon aktif untuk tes lokal.";
+  }catch(e){
+    document.getElementById("micStatus").textContent="Mikrofon tidak aktif. Periksa izin browser.";
+  }
 }
 
+function micOff(){
+  if(micStream){
+    micStream.getTracks().forEach(t=>t.stop());
+    micStream=null;
+  }
+  document.getElementById("micAudio").pause();
+  document.getElementById("micAudio").srcObject=null;
+  document.getElementById("micAudio").style.display="none";
+  document.getElementById("micStatus").textContent="Tes mikrofon dimatikan.";
+}
+
+muatInfo();
 cekStatus();
-setInterval(cekStatus,5000);
 </script>
-
 </body>
 </html>
