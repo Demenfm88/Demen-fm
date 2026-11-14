@@ -4,545 +4,149 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Studio Admin Demen FM 88</title>
+<title>Master Console Demen FM 88</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#071b36;color:white;font-family:Arial,sans-serif}
-header{background:#087eaa;text-align:center;padding:20px}
-h1{color:#ffd84d;margin:0}
-main{max-width:850px;margin:auto;padding:12px}
-details{background:#102a4a;border:1px solid #36516e;border-radius:12px;margin:12px 0;overflow:hidden}
-summary{padding:15px;background:#0b203b;font-size:17px;font-weight:bold;cursor:pointer}
-.content{padding:14px}
-label{display:block;margin:12px 0 6px;font-weight:bold}
-input,select,textarea{width:100%;padding:11px;border-radius:7px;margin-bottom:8px;border:1px solid #aaa}
-button{background:#087eaa;color:white;border:0;border-radius:8px;padding:12px;margin:4px 2px;font-weight:bold;cursor:pointer}
-.red{background:#df354f}
-.yellow{background:#ffd84d;color:#102033}
-.green{background:#168c54}
-.status{background:#061426;padding:12px;border-radius:8px;margin-top:10px;overflow-wrap:anywhere}
-audio,iframe{width:100%;margin-top:10px}
-iframe{aspect-ratio:16/9;border:0}
-video{width:100%;background:#000;border-radius:10px;margin-top:10px;max-height:480px}
-img{max-width:100%;border-radius:8px}
-small{color:#c4d3e4;line-height:1.6}
-hr{border-color:#36516e;margin:18px 0}
+body{margin:0;background:#071426;color:#fff;font-family:Arial,sans-serif}
+header{background:linear-gradient(120deg,#07547e,#079bb5);padding:24px 12px;text-align:center}
+header h1{margin:0;color:#ffe16b;font-size:27px}
+header p{margin:8px 0 0;font-size:13px}
+main{max-width:650px;margin:auto;padding:15px}
+.panel{background:#102943;border:1px solid #285071;border-radius:16px;padding:17px;margin-bottom:15px}
+h2{font-size:18px;margin:0 0 16px;color:#ffe16b}
+.status{text-align:center;padding:15px;font-size:20px;font-weight:bold;color:#ffcf52}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{border:0;border-radius:10px;padding:16px;font-size:16px;font-weight:bold;color:white;width:100%;margin:4px 0;cursor:pointer}
+.green{background:#15975c}
+.red{background:#bd3944}
+.blue{background:#087eaa}
+.gray{background:#53677c}
+.control{margin:17px 0}
+.control label{display:flex;justify-content:space-between;margin-bottom:10px}
+input[type=range]{width:100%;accent-color:#13c78a}
+input:disabled{opacity:.5}
+small{color:#a9bfd3}
+.meter{height:13px;background:#263d53;border-radius:20px;overflow:hidden}
+.meter span{display:block;height:100%;width:0%;background:#18c77e}
+footer{text-align:center;color:#8aa6bf;padding:20px;font-size:12px}
 </style>
 </head>
 <body>
 
 <header>
-<h1>DEMEN FM 88</h1>
-<p>Studio Admin — Emang Ndemenin</p>
-<p>Radionya Cilacap</p>
+<h1>🎙️ DEMEN FM 88</h1>
+<p>MASTER CONSOLE • EMANG NDEMENIN</p>
+<p>RADIONYA CILACAP</p>
 </header>
 
 <main>
 
-<details open>
-<summary>📻 PENGATURAN SIARAN RADIO</summary>
-<div class="content">
-
-<label>Protokol</label>
-<select id="protocol">
-<option>SHOUTcast 1</option>
-<option>SHOUTcast 2</option>
-<option>Icecast</option>
-</select>
-
-<label>Host / IP Server</label>
-<input id="host" placeholder="Host server radio">
-
-<label>Port</label>
-<input id="port" type="number" placeholder="Port server">
-
-<label>Bitrate</label>
-<select id="bitrate">
-<option>64 kbps</option>
-<option selected>96 kbps</option>
-<option>128 kbps</option>
-<option>320 kbps</option>
-</select>
-
-<label>Sample Rate</label>
-<select id="sampleRate">
-<option selected>44100 Hz</option>
-<option>48000 Hz</option>
-</select>
-
-<label>Saluran Audio</label>
-<select id="channels">
-<option>Stereo</option>
-<option>Mono</option>
-</select>
-
-<button onclick="simpanPengaturan()">Simpan Pengaturan</button>
-<div class="status" id="statusPengaturan">Pengaturan belum disimpan.</div>
-
+<div class="panel">
+<h2>📡 STATUS SIARAN</h2>
+<div class="status" id="status">● MEMERIKSA SERVER</div>
+<div class="grid">
+<button class="green" onclick="aksi('start')">▶ START AUTO DJ</button>
+<button class="red" onclick="aksi('stop')">■ STOP AUTO DJ</button>
 </div>
-</details>
-
-<details open>
-<summary>🎵 AUTO DJ / PEMUTAR MUSIK HP</summary>
-<div class="content">
-
-<label>Pilih File Lagu</label>
-<input id="musicFiles" type="file" accept="audio/*" multiple>
-
-<audio id="audioPlayer" controls></audio>
-
-<button onclick="putar()">Putar / Jeda</button>
-<button onclick="laguSebelum()">Sebelumnya</button>
-<button onclick="laguBerikut()">Berikutnya</button>
-<button class="red" onclick="berhenti()">Berhenti</button>
-
-<div class="status" id="nowPlaying">Belum ada lagu.</div>
-<ol id="songList"></ol>
-
-<small>Pemutar lokal belum otomatis mengirim musik ke pendengar. Gunakan aplikasi encoder untuk siaran radio.</small>
-
-</div>
-</details>
-
-<details>
-<summary>▶ PEMUTAR YOUTUBE</summary>
-<div class="content">
-
-<label>Tempel Link YouTube</label>
-<input id="youtubeURL" placeholder="https://www.youtube.com/watch?v=...">
-
-<button onclick="bukaYouTube()">Buka Pemutar</button>
-<button class="red" onclick="tutupYouTube()">Tutup</button>
-
-<div class="status" id="youtubeStatus">Belum ada video.</div>
-
-<div id="youtubeBox" hidden>
-<iframe id="youtubePlayer" allowfullscreen></iframe>
+<button class="blue" onclick="cekStatus()">↻ PERIKSA STATUS</button>
+<div id="pesan" style="text-align:center;margin-top:10px"></div>
 </div>
 
-<small>Suara YouTube tidak otomatis masuk ke radio.</small>
+<div class="panel">
+<h2>🎚️ MASTER MIXER</h2>
 
-</div>
-</details>
-
-<details>
-<summary>🎙️ MIKROFON STUDIO</summary>
-<div class="content">
-
-<button class="green" onclick="aktifkanMic()">Aktifkan Mic</button>
-<button class="red" onclick="matikanMic()">Matikan Mic</button>
-
-<div class="status" id="statusMic">Mic mati.</div>
-
-<small>Akses mikrofon belum berarti suara sudah terkirim ke pendengar.</small>
-
-</div>
-</details>
-
-<details open>
-<summary>📹 KAMERA STUDIO / USB-C</summary>
-<div class="content">
-
-<p>Kamera HP atau kamera eksternal yang didukung Android.</p>
-
-<label>Pilih Kamera</label>
-<select id="cameraSelect">
-<option value="">Kamera belum dipilih</option>
-</select>
-
-<button onclick="cariKamera()">Cari Kamera</button>
-<button class="green" onclick="aktifkanKamera()">AKTIFKAN KAMERA</button>
-<button class="red" onclick="matikanKamera()">MATIKAN KAMERA</button>
-
-<video id="cameraPreview" autoplay muted playsinline></video>
-
-<div class="status" id="cameraStatus">Kamera belum aktif.</div>
-
-<small>Kamera USB-C memerlukan dukungan OTG, UVC dan browser yang mengenalinya. Tidak semua kamera eksternal dapat dibuka langsung dari browser.</small>
-
-</div>
-</details>
-
-<details open>
-<summary>🔴 LIVE VIDEO YOUTUBE</summary>
-<div class="content">
-
-<label>Link LIVE YouTube</label>
-<input id="liveYoutubeURL" placeholder="Tempel link YouTube Live">
-
-<button class="green" onclick="tampilkanLive()">TAMPILKAN LIVE</button>
-<button class="red" onclick="tutupLive()">TUTUP LIVE</button>
-
-<div class="status" id="liveVideoStatus">Belum ada siaran langsung.</div>
-
-<div id="liveVideoBox" hidden>
-<iframe id="liveVideoPlayer"
-allow="autoplay; encrypted-media; picture-in-picture"
-allowfullscreen></iframe>
+<div class="control">
+<label>MASTER VOLUME <b id="masterVal">80%</b></label>
+<input type="range" min="0" max="100" value="80"
+oninput="masterVal.textContent=this.value+'%'">
 </div>
 
-<hr>
-
-<label>Alamat Server YouTube RTMP</label>
-<input value="rtmp://a.rtmp.youtube.com/live2" readonly>
-
-<small>Stream Key YouTube jangan ditempel di website. Masukkan Stream Key hanya ke aplikasi encoder di HP. Website ini menyediakan pratinjau kamera dan pemutar siaran YouTube, bukan pengirim RTMP langsung.</small>
-
+<div class="control">
+<label>MUSIC VOLUME <b id="musicVal">80%</b></label>
+<input type="range" min="0" max="100" value="80"
+oninput="musicVal.textContent=this.value+'%'">
 </div>
-</details>
 
-<details>
-<summary>📡 GO LIVE DAN SERVER RADIO</summary>
-<div class="content">
-
-<label>Alamat Radio Pendengar</label>
-<input id="radioPage" value="https://demenfm88.radio12345.com">
-
-<button onclick="bukaRadio()">Buka Halaman Radio</button>
-<button onclick="cekServer()">Cek Koneksi</button>
-<button class="red" onclick="goLive()">GO LIVE</button>
-
-<div class="status" id="liveStatus">Belum melakukan pemeriksaan.</div>
-
-<small>Gunakan aplikasi encoder yang terhubung ke server SHOUTcast untuk menyiarkan audio.</small>
-
+<div class="control">
+<label>MIC VOLUME <b id="micVal">70%</b></label>
+<input type="range" min="0" max="100" value="70"
+oninput="micVal.textContent=this.value+'%'">
 </div>
-</details>
 
-<details>
-<summary>📰 INFORMASI UNTUK PENDENGAR</summary>
-<div class="content">
-
-<label>Pilih Gambar Informasi</label>
-<input id="infoImage" type="file" accept="image/*">
-
-<label>Judul Informasi</label>
-<input id="infoTitle" placeholder="Judul informasi">
-
-<label>Keterangan</label>
-<textarea id="infoDescription" rows="4" placeholder="Tulis informasi untuk pendengar"></textarea>
-
-<button onclick="pratinjauInfo()">Lihat Pratinjau</button>
-<button class="red" onclick="bersihkanInfo()">Bersihkan</button>
-
-<div id="infoPreview" class="status">Pratinjau informasi akan muncul di sini.</div>
-
-<small>Informasi ini masih berupa pratinjau lokal. Untuk menerbitkan ke halaman pendengar diperlukan penyimpanan bersama.</small>
-
+<small>Fader merupakan pengaturan tampilan. Belum mengubah level audio Liquidsoap.</small>
 </div>
-</details>
 
-<footer style="text-align:center;padding:20px;color:#c4d3e4">
-Demen FM 88 • Emang Ndemenin • Radionya Cilacap
-</footer>
+<div class="panel">
+<h2>🎤 MICROPHONE</h2>
+<div class="grid">
+<button class="green" onclick="micInfo('Mikrofon belum terhubung')">MIC ON</button>
+<button class="red" onclick="micInfo('Mikrofon belum terhubung')">MIC OFF</button>
+</div>
+<div id="micPesan" class="status" style="font-size:14px">INPUT MIC BELUM TERHUBUNG</div>
+</div>
+
+<div class="panel">
+<h2>🔊 AUDIO METER</h2>
+<p>LEFT CHANNEL</p>
+<div class="meter"><span></span></div>
+<p>RIGHT CHANNEL</p>
+<div class="meter"><span></span></div>
+<small>Meter menunggu integrasi pembacaan audio langsung.</small>
+</div>
+
+<div class="panel">
+<h2>🌐 SERVER CASTER.FM</h2>
+<p>Server: sapircast.caster.fm</p>
+<p>Port: 19950</p>
+<p>Format: MP3 / 96 kbps</p>
+<p>Mount: /ePKwz</p>
+<div class="status" style="font-size:15px">STATUS KONEKSI BELUM DIVERIFIKASI</div>
+</div>
+
+<div class="panel">
+<h2>📻 INFORMASI RADIO</h2>
+<p><b>DEМEN FM 88 - Radionya Cilacap</b></p>
+<p>Media Informasi dan Hiburan</p>
+<p>DEМEN FM EMANG NDEMENIN</p>
+</div>
 
 </main>
 
+<footer>MASTER CONSOLE DEMEN FM 88 © 2026</footer>
+
 <script>
-const $ = id => document.getElementById(id);
+const SERVER="http://127.0.0.1:8765";
 
-/* PENGATURAN RADIO */
-function simpanPengaturan(){
-$("statusPengaturan").textContent =
-$("protocol").value+" • "+$("bitrate").value+" • "+
-$("sampleRate").value+" • "+$("channels").value+
-". Pengaturan pilihan tersimpan di tampilan saja.";
+async function cekStatus(){
+ try{
+  const r=await fetch(SERVER+"/status");
+  const d=await r.json();
+  document.getElementById("status").textContent=
+  d.status==="hidup"?"🟢 AUTO DJ BERJALAN":"🔴 AUTO DJ MATI";
+ }catch(e){
+  document.getElementById("status").textContent=
+  "⚪ SERVER BELUM TERHUBUNG";
+ }
 }
 
-/* PEMUTAR MUSIK */
-let songs=[];
-let songIndex=-1;
-let songURL=null;
-
-$("musicFiles").addEventListener("change",()=>{
-if(songURL)URL.revokeObjectURL(songURL);
-songs=Array.from($("musicFiles").files||[]);
-songIndex=-1;
-$("songList").replaceChildren();
-
-songs.forEach((file,index)=>{
-const li=document.createElement("li");
-const btn=document.createElement("button");
-btn.textContent=file.name;
-btn.onclick=()=>pilihLagu(index,true);
-li.appendChild(btn);
-$("songList").appendChild(li);
-});
-
-if(songs.length)pilihLagu(0,false);
-});
-
-function pilihLagu(index,autoplay){
-if(!songs.length)return;
-if(index<0)index=songs.length-1;
-if(index>=songs.length)index=0;
-songIndex=index;
-
-if(songURL)URL.revokeObjectURL(songURL);
-songURL=URL.createObjectURL(songs[index]);
-
-$("audioPlayer").src=songURL;
-$("nowPlaying").textContent="Lagu: "+songs[index].name;
-
-if(autoplay)$("audioPlayer").play().catch(()=>{});
+async function aksi(perintah){
+ const p=document.getElementById("pesan");
+ p.textContent="Mengirim perintah...";
+ try{
+  const r=await fetch(SERVER+"/"+perintah,{method:"POST"});
+  p.textContent=await r.text();
+  setTimeout(cekStatus,1000);
+ }catch(e){
+  p.textContent="Server Termux belum terhubung";
+ }
 }
 
-function putar(){
-if(!$("audioPlayer").src){
-$("nowPlaying").textContent="Pilih lagu terlebih dahulu.";
-return;
-}
-if($("audioPlayer").paused){
-$("audioPlayer").play().catch(()=>{});
-}else{
-$("audioPlayer").pause();
-}
+function micInfo(pesan){
+ document.getElementById("micPesan").textContent=pesan;
 }
 
-function laguSebelum(){pilihLagu(songIndex-1,true);}
-function laguBerikut(){pilihLagu(songIndex+1,true);}
-
-function berhenti(){
-$("audioPlayer").pause();
-$("audioPlayer").currentTime=0;
-$("nowPlaying").textContent="Musik dihentikan.";
-}
-
-$("audioPlayer").addEventListener("ended",()=>{
-if(songs.length)pilihLagu(songIndex+1,true);
-});
-
-/* YOUTUBE */
-function ambilID(url){
-try{
-const u=new URL(url);
-let id=null;
-
-if(u.hostname==="youtu.be"){
-id=u.pathname.split("/").filter(Boolean)[0];
-}else if(u.hostname.endsWith("youtube.com")){
-if(u.pathname==="/watch")id=u.searchParams.get("v");
-else{
-const p=u.pathname.split("/").filter(Boolean);
-if(["embed","shorts","live"].includes(p[0]))id=p[1];
-}
-}
-return id&&/^[\w-]{11}$/.test(id)?id:null;
-}catch(e){return null;}
-}
-
-function bukaYouTube(){
-const id=ambilID($("youtubeURL").value.trim());
-if(!id){
-$("youtubeStatus").textContent="Link YouTube tidak valid.";
-return;
-}
-$("youtubePlayer").src="https://www.youtube-nocookie.com/embed/"+id;
-$("youtubeBox").hidden=false;
-$("youtubeStatus").textContent="Pemutar YouTube dibuka.";
-}
-
-function tutupYouTube(){
-$("youtubePlayer").src="";
-$("youtubeBox").hidden=true;
-$("youtubeStatus").textContent="Pemutar YouTube ditutup.";
-}
-
-/* MIKROFON */
-let micStream=null;
-
-async function aktifkanMic(){
-if(!navigator.mediaDevices?.getUserMedia){
-$("statusMic").textContent="Browser tidak mendukung mikrofon. Gunakan HTTPS.";
-return;
-}
-try{
-micStream=await navigator.mediaDevices.getUserMedia({audio:true});
-$("statusMic").textContent="Mic aktif. Suara belum otomatis terkirim ke radio.";
-}catch(e){
-$("statusMic").textContent="Gagal mengaktifkan mic. Periksa izin mikrofon.";
-}
-}
-
-function matikanMic(){
-if(micStream){
-micStream.getTracks().forEach(t=>t.stop());
-micStream=null;
-}
-$("statusMic").textContent="Mic mati.";
-}
-
-/* KAMERA HP DAN USB */
-let cameraStream=null;
-
-async function cariKamera(){
-if(!navigator.mediaDevices?.enumerateDevices){
-$("cameraStatus").textContent="Browser tidak mendukung pencarian kamera.";
-return;
-}
-
-try{
-const devices=await navigator.mediaDevices.enumerateDevices();
-const cameras=devices.filter(d=>d.kind==="videoinput");
-const select=$("cameraSelect");
-select.replaceChildren();
-
-if(!cameras.length){
-select.add(new Option("Kamera belum terdeteksi",""));
-$("cameraStatus").textContent="Belum ada kamera terdeteksi. Berikan izin kamera dahulu.";
-return;
-}
-
-cameras.forEach((camera,index)=>{
-select.add(new Option(camera.label||"Kamera "+(index+1),camera.deviceId));
-});
-$("cameraStatus").textContent=cameras.length+" kamera ditemukan.";
-}catch(e){
-$("cameraStatus").textContent="Tidak dapat mencari kamera.";
-}
-}
-
-async function aktifkanKamera(){
-if(!navigator.mediaDevices?.getUserMedia){
-$("cameraStatus").textContent="Browser tidak mendukung kamera. Gunakan HTTPS.";
-return;
-}
-
-matikanKamera();
-
-try{
-const deviceId=$("cameraSelect").value;
-const video=deviceId?
-{deviceId:{exact:deviceId}}:
-{facingMode:"environment"};
-
-cameraStream=await navigator.mediaDevices.getUserMedia({
-video:video,
-audio:false
-});
-
-$("cameraPreview").srcObject=cameraStream;
-$("cameraStatus").textContent="Kamera aktif. Video tampil di Studio.";
-await cariKamera();
-
-}catch(e){
-$("cameraStatus").textContent="Kamera gagal dibuka. Periksa izin atau sambungan USB-C.";
-}
-}
-
-function matikanKamera(){
-if(cameraStream){
-cameraStream.getTracks().forEach(t=>t.stop());
-cameraStream=null;
-}
-$("cameraPreview").srcObject=null;
-$("cameraStatus").textContent="Kamera mati.";
-}
-
-/* LIVE YOUTUBE */
-function tampilkanLive(){
-const id=ambilID($("liveYoutubeURL").value.trim());
-
-if(!id){
-$("liveVideoStatus").textContent="Masukkan link YouTube Live yang benar.";
-return;
-}
-
-$("liveVideoPlayer").src="https://www.youtube-nocookie.com/embed/"+id;
-$("liveVideoBox").hidden=false;
-$("liveVideoStatus").textContent="Pemutar LIVE YouTube ditampilkan.";
-}
-
-function tutupLive(){
-$("liveVideoPlayer").src="";
-$("liveVideoBox").hidden=true;
-$("liveVideoStatus").textContent="Pemutar LIVE ditutup.";
-}
-
-/* SERVER RADIO */
-function bukaRadio(){
-try{
-const u=new URL($("radioPage").value.trim());
-if(!["http:","https:"].includes(u.protocol))throw Error();
-window.open(u.href,"_blank","noopener");
-}catch(e){
-$("liveStatus").textContent="Alamat radio tidak valid.";
-}
-}
-
-async function cekServer(){
-const host=$("host").value.trim();
-const port=$("port").value.trim();
-
-if(!host||!port){
-$("liveStatus").textContent="Isi host dan port terlebih dahulu.";
-return;
-}
-
-$("liveStatus").textContent="Mencoba memeriksa server.";
-
-try{
-const r=await fetch("https://"+host+":"+port+"/",{
-mode:"cors",
-cache:"no-store"
-});
-$("liveStatus").textContent="Server merespons HTTP "+r.status+".";
-}catch(e){
-$("liveStatus").textContent="Belum dapat memastikan koneksi. Browser mungkin membatasi pemeriksaan.";
-}
-}
-
-function goLive(){
-$("liveStatus").textContent="Hubungkan aplikasi encoder HP ke server radio untuk mulai siaran.";
-}
-
-/* INFORMASI PENDENGAR */
-let infoURL=null;
-
-function pratinjauInfo(){
-const box=$("infoPreview");
-box.replaceChildren();
-
-const h=document.createElement("h3");
-h.textContent=$("infoTitle").value.trim()||"Info Demen FM";
-box.appendChild(h);
-
-const file=$("infoImage").files[0];
-
-if(file&&file.type.startsWith("image/")){
-if(infoURL)URL.revokeObjectURL(infoURL);
-infoURL=URL.createObjectURL(file);
-
-const img=document.createElement("img");
-img.src=infoURL;
-img.alt="Gambar informasi";
-box.appendChild(img);
-}
-
-const p=document.createElement("p");
-p.textContent=$("infoDescription").value.trim()||"Belum ada keterangan.";
-box.appendChild(p);
-}
-
-function bersihkanInfo(){
-$("infoImage").value="";
-$("infoTitle").value="";
-$("infoDescription").value="";
-$("infoPreview").textContent="Pratinjau informasi akan muncul di sini.";
-
-if(infoURL){
-URL.revokeObjectURL(infoURL);
-infoURL=null;
-}
-}
-
-/* BERSIHKAN SUMBER SAAT HALAMAN DITINGGALKAN */
-window.addEventListener("pagehide",()=>{
-matikanMic();
-matikanKamera();
-if(songURL)URL.revokeObjectURL(songURL);
-if(infoURL)URL.revokeObjectURL(infoURL);
-});
+cekStatus();
+setInterval(cekStatus,5000);
 </script>
 
 </body>
