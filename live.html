@@ -2,22 +2,75 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Demen FM 88 - Radionya Cilacap</title>
+
+<meta name="description" content="Demen FM emang ndemenin. Radionya Cilacap, media informasi dan hiburan.">
+
+<meta property="og:title" content="Demen FM - Emang Ndemenin">
+<meta property="og:description" content="Demen FM 88 - Radionya Cilacap">
+<meta property="og:image" content="https://demenfm88.github.io/Demen-fm/Demen%20fm%20gunung.png">
+<meta property="og:type" content="website">
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #071b36;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  text-align: center;
+  background: #087eaa;
+  padding: 22px 12px;
+}
+
+header img {
+  width: 170px;
+  max-width: 75%;
+  height: auto;
+  display: block;
+  margin: auto;
+}
+
+header h1 {
+  color: #ffe45c;
+  margin: 12px 0 5px;
+  font-size: 27px;
+}
+
+header p {
+  margin: 5px 0;
+}
+
+main {
+  max-width: 650px;
+  margin: auto;
+  padding: 12px;
+}
+
 #player-demen {
   position: relative;
   overflow: hidden;
   background: #071b36;
   border: 2px solid #087eaa;
   border-radius: 18px;
-  padding: 12px;
+  padding: 15px;
   margin: 15px auto;
+  min-height: 120px;
 }
 
-#player-demen .watermark-demen {
+.watermark-demen {
   position: absolute;
   inset: 0;
-  background-image: url('logo%20demen-fm.png');
+  background-image: url("./Demen%20fm%20gunung.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 75% auto;
@@ -26,90 +79,96 @@
   z-index: 0;
 }
 
-#player-demen .cstrEmbed {
+.cstrEmbed {
   position: relative;
   z-index: 1;
 }
-</style>
 
+.card {
+  background: white;
+  color: #123;
+  padding: 18px;
+  margin: 15px 0;
+  border-radius: 16px;
+}
 
+.wa-button {
+  display: block;
+  text-align: center;
+  background: #25D366;
+  color: white;
+  padding: 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+}
 
-
-<meta name="orb-verification" content="d01a7b1fb6e96fb7"/>
-
-<meta property="og:title" content="Demen FM - Emang Ndemenin">
-<meta property="og:description" content="Demen FM 88 - Radionya Cilacap. Media Informasi dan Hiburan. Dengarkan siaran kami di sini!">
-<meta property="og:url" content="https://demenfm88.github.io/Demen-fm/">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Demen FM">
-<meta property="og:image" content="https://demenfm88.github.io/Demen-fm/Demen%20fm%20gunung.png">
-<meta property="og:image:alt" content="Logo Demen FM Gunung">
-<meta property="og:image:type" content="image/png">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Demen FM - Emang Ndemenin">
-<meta name="twitter:description" content="Radionya Cilacap. Media Informasi dan Hiburan.">
-<meta name="twitter:image" content="https://demenfm88.github.io/Demen-fm/Demen%20fm%20gunung.png">
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Demen FM - Emang Ndemenin</title>
-
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#071b36;color:white;font-family:Arial,sans-serif}
-header{text-align:center;background:#087eaa;padding:24px 12px}
-header img{width:150px;max-width:70%;height:auto}
-header h1{color:#ffe45c;margin:10px 0}
-main{max-width:650px;margin:auto;padding:12px}
-.card{background:white;color:#123;padding:18px;margin:14px 0;border-radius:16px}
-button,.btn{background:#e91e50;color:white;border:0;border-radius:24px;padding:12px 15px;margin:4px;cursor:pointer;font-size:15px}
-input{width:100%;padding:12px;margin:8px 0;border:1px solid #bbb;border-radius:8px}
-audio{width:100%;margin:12px 0}
-li{padding:10px;border-bottom:1px solid #ddd;overflow-wrap:anywhere}
-.active{background:#d9f4ff}
-.small{font-size:13px;color:#555}
-a{color:#087eaa}
+footer {
+  text-align: center;
+  padding: 18px;
+  color: #ddd;
+  font-size: 13px;
+}
 </style>
 </head>
+
 <body>
+
 <header>
-<img src="./Logo%20Demen%20gunung.png" alt="Logo Demen FM">
+  <img src="./Demen%20fm%20gunung.png" alt="Logo Demen FM">
+  <h1>DEMEN FM 88</h1>
+  <p>Emang Ndemenin</p>
+  <p>Radionya Cilacap - Media Informasi dan Hiburan</p>
 </header>
 
-  <!-- PLAYER DEMEN FM -->
-<div id="player-demen">
-  <div class="watermark-demen"></div>
+<main>
 
-  <div class="cstrEmbed"
-   data-type="newStreamPlayer"
-   data-publicToken="31a27733-74a7-4f58-9f98-7f7b857b3701"
-   data-theme="light"
-   data-color="FF0000"
-   data-channelId=""
-   data-rendered="false">
+  <h2 style="text-align:center;color:#ffe45c;">
+    🔴 LIVE STREAMING DEMEN FM
+  </h2>
 
-    <a href="https://www.caster.fm">Shoutcast Hosting</a>
-    <a href="https://www.caster.fm">Stream Hosting</a>
-    <a href="https://www.caster.fm">Radio Server Hosting</a>
+  <div id="player-demen">
+
+    <div class="watermark-demen"></div>
+
+    <div class="cstrEmbed"
+      data-type="newStreamPlayer"
+      data-publicToken="31a27733-74a7-4f58-9f98-7f7b857b3701"
+      data-theme="light"
+      data-color="FF0000"
+      data-channelId=""
+      data-rendered="false">
+
+      <a href="https://www.caster.fm">Caster.fm</a>
+    </div>
+
   </div>
-</div>
 
+  <section class="card">
+    <h2>💬 REQUEST LAGU & CHAT DJ</h2>
+
+    <p>
+      Punya lagu favorit atau ingin menyapa penyiar Demen FM?
+      Yang mau nyawer juga boleh! 🤝
+    </p>
+
+    <a class="wa-button"
+      href="https://wa.me/6285137397668?text=Halo%20Demen%20FM%2C%20saya%20mau%20request%20lagu."
+      target="_blank"
+      rel="noopener noreferrer">
+      💬 REQUEST LAGU VIA WHATSAPP
+    </a>
+  </section>
+
+</main>
+
+<footer>
+  DEMEN FM 88 - EMANG NDEMENIN
+  <br>
+  Radionya Cilacap ❤️
+</footer>
 
 <script src="https://cdn.cloud.caster.fm/widgets/embed.js"></script>
 
-<!-- REQUEST LAGU -->
-<section class="card">
-  <h2>💬 REQUEST LAGU & CHAT DJ</h2>
-  <p>Punya lagu favorit atau ingin menyapa penyiar Demen FM? Kirim pesan ke studio kami 𝙔𝙖𝙣𝙜 𝙈𝙖𝙪 𝙉𝙮𝙖𝙬𝙚𝙧 𝙅𝙪𝙜𝙖 𝘽𝙤𝙡𝙚𝙝 🤝 !</p>
-  <a href="https://wa.me/6285137397668?text=Halo%20Demen%20FM%2C%20saya%20mau%20request%20lagu."
-     target="_blank"
-     rel="noopener noreferrer"
-     style="display:block;text-align:center;background:#25D366;color:white;padding:14px;border-radius:10px;text-decoration:none;font-weight:bold;">
-    💬 REQUEST LAGU VIA WHATSAPP
-  </a>
-  
-
-</section>
 </body>
 </html>
